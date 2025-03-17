@@ -1,0 +1,8 @@
+-std=c99
+-x
+c
+-Wall
+-Wextra
+-Wconversion
+-Wdouble-promotion
+-Wpedantic

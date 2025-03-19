@@ -31,6 +31,11 @@ pub fn build(b: *std.Build) void {
     lib.addIncludePath(gci.path("src/interface"));
     b.installArtifact(lib);
 
+    lib.addCSourceFiles(.{
+        .root = b.path("src"),
+        .files = &.{"lec.c"},
+    });
+
     const lib_unit_tests = b.addTest(.{
         .root_source_file = b.path("src/lec.zig"),
         .target = target,

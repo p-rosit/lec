@@ -15,6 +15,8 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
         .imports = &.{.{ .name = "gci", .module = gci.module("gci") }},
     });
+    mod.addIncludePath(b.path("src"));
+    mod.addIncludePath(gci.path("src/interface"));
 
     const lib = b.addStaticLibrary(.{
         .name = "lec",
@@ -25,6 +27,8 @@ pub fn build(b: *std.Build) void {
     });
     mod.linkLibrary(lib);
     lib.linkLibrary(gci.artifact("gci"));
+    lib.addIncludePath(b.path("src"));
+    lib.addIncludePath(gci.path("src/interface"));
     b.installArtifact(lib);
 
     const lib_unit_tests = b.addTest(.{
@@ -34,6 +38,8 @@ pub fn build(b: *std.Build) void {
         .link_libc = true,
     });
     lib_unit_tests.linkLibrary(lib);
+    lib_unit_tests.addIncludePath(b.path("src"));
+    lib_unit_tests.addIncludePath(gci.path("src/interface"));
     lib_unit_tests.root_module.addImport("gci", gci.module("gci"));
     const run_lib_unit_tests = b.addRunArtifact(lib_unit_tests);
 

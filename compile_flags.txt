@@ -1,6 +1,8 @@
 -std=c99
 -x
 c
+-I
+/home/pontus/clang/gci/src/interface
 -Wall
 -Wextra
 -Wconversion

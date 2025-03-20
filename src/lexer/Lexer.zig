@@ -1,8 +1,8 @@
 const std = @import("std");
-const internal = @import("internal.zig");
+const internal = @import("../internal.zig");
 const lib = internal.lib;
 const gci = @import("gci");
-const zlec = @import("lec.zig");
+const zlec = @import("../lec.zig");
 const Self = @This();
 
 inner: lib.LecLexer,

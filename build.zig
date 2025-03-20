@@ -33,7 +33,7 @@ pub fn build(b: *std.Build) void {
 
     lib.addCSourceFiles(.{
         .root = b.path("src"),
-        .files = &.{ "lec_arena.c", "lec_lexer.c" },
+        .files = &.{ "arena/arena.c", "lexer/lexer.c" },
     });
 
     const lib_unit_tests = b.addTest(.{

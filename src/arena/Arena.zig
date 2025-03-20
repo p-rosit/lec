@@ -1,4 +1,4 @@
-const internal = @import("internal.zig");
+const internal = @import("../internal.zig");
 const lib = internal.lib;
 const Self = @This();
 

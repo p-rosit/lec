@@ -32,7 +32,7 @@ enum LecState {
     LEC_STATE_MAX,
 };
 
-struct LecContext {
+struct LecLexer {
     struct GciInterfaceReader reader;
     struct LecArena arena;
     size_t prev_start;
@@ -40,9 +40,9 @@ struct LecContext {
     int buffer_char;
 };
 
-enum LecError lec_lexer_init(struct LecContext *context, struct GciInterfaceReader reader, struct LecArena arena);
+enum LecError lec_lexer_init(struct LecLexer *lexer, struct GciInterfaceReader reader, struct LecArena arena);
 
-enum LecError lec_lexer_next(struct LecContext *context, struct LecToken *token);
-enum LecError lec_lexer_value(struct LecContext *context, struct LecToken token, char **string, size_t *length);
+enum LecError lec_lexer_next(struct LecLexer *lexer, struct LecToken *token);
+enum LecError lec_lexer_value(struct LecLexer *lexer, struct LecToken token, char **string, size_t *length);
 
 #endif

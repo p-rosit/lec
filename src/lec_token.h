@@ -10,10 +10,7 @@ enum LecTokenType {
     LEC_TOKEN_TYPE_NUMBER_FLOAT, // -1.4e+5
     LEC_TOKEN_TYPE_CHAR, // '...'
     LEC_TOKEN_TYPE_STRING, // "..."
-
     LEC_TOKEN_TYPE_COMMENT, // c-style
-    LEC_TOKEN_TYPE_WHITESPACE, //
-    LEC_TOKEN_TYPE_NEWLINE, // \n
 
     LEC_TOKEN_TYPE_PLUS, // +
     LEC_TOKEN_TYPE_MINUS, // -
@@ -29,8 +26,8 @@ enum LecTokenType {
 
     LEC_TOKEN_TYPE_DOT, // .
     LEC_TOKEN_TYPE_COMMA, // ,
-    LEC_TOKEN_TYPE_COLON, // :
     LEC_TOKEN_TYPE_QUESTION, // ?
+    LEC_TOKEN_TYPE_COLON, // :
     LEC_TOKEN_TYPE_SEMICOLON, // ;
 
     LEC_TOKEN_TYPE_MAX,

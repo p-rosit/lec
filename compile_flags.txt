@@ -3,6 +3,8 @@
 c
 -I
 /home/pontus/clang/gci/src/interface
+-I
+/home/pontus/clang/lec/src
 -Wall
 -Wextra
 -Wconversion

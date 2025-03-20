@@ -1,4 +1,5 @@
-#include "lec.h"
+#include <assert.h>
+#include "lec_arena.h"
 
 enum LecError lec_arena_init(struct LecArena *arena, char *buffer, size_t length) {
     if (arena == NULL) { return LEC_ERROR_NULL; }
@@ -12,11 +13,11 @@ enum LecError lec_arena_init(struct LecArena *arena, char *buffer, size_t length
     return LEC_ERROR_OK;
 }
 
-enum LecError lec_context_init(struct LecContext *context, struct GciInterfaceReader reader, struct LecArena arena) {
-    if (context == NULL) { return LEC_ERROR_NULL; }
-    
-    context->reader = reader;
-    context->arena = arena;
+enum LecError lec_arena_add(struct LecArena *arena, char c) {
+    assert(arena != NULL);
+    if (arena->position >= arena->capacity) { return LEC_ERROR_BUFFER; }
 
+    assert(arena->buffer != NULL);
+    arena->buffer[arena->position++] = c;
     return LEC_ERROR_OK;
 }

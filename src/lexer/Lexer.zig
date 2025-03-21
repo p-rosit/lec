@@ -26,6 +26,7 @@ pub fn next(self: *Self) !zlec.Token {
 }
 
 const testing = std.testing;
+const TokenType = zlec.Token.Type;
 
 test "c tests" {
     _ = @import("test_lexer.zig");
@@ -50,6 +51,7 @@ test "lexer next plus" {
 
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
+    try testing.expectEqual(TokenType.plus, token.type());
     try testing.expectEqual(0, token.inner.start);
     try testing.expectEqual(1, token.inner.length);
     try testing.expectEqualStrings("+", &buffer);

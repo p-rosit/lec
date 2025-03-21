@@ -70,6 +70,9 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
         case (LEC_STATE_START):
             switch (c) {
                 case '+':
+                    lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_PLUS;
+                    break;
                 case '-':
                 case '*':
                 case '(':

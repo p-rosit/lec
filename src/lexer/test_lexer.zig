@@ -35,6 +35,7 @@ test "lexer next plus" {
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_PLUS), token.type);
     try testing.expectEqual(0, token.start);
     try testing.expectEqual(1, token.length);
     try testing.expectEqualStrings("+", &buffer);

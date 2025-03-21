@@ -1,4 +1,5 @@
 pub const lib = @cImport({
+    @cInclude("gci_reader.h");
     @cInclude("lec_arena.h");
     @cInclude("lec_common.h");
     @cInclude("lec_token.h");

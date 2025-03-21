@@ -44,7 +44,9 @@ pub fn build(b: *std.Build) void {
     });
     lib_unit_tests.linkLibrary(lib);
     lib_unit_tests.addIncludePath(b.path("src"));
+    lib_unit_tests.addIncludePath(gci.path("src"));
     lib_unit_tests.addIncludePath(gci.path("src/interface"));
+    lib_unit_tests.addIncludePath(gci.path("src/implementation"));
     lib_unit_tests.root_module.addImport("gci", gci.module("gci"));
     const run_lib_unit_tests = b.addRunArtifact(lib_unit_tests);
 

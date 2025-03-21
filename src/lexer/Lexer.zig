@@ -27,6 +27,10 @@ pub fn next(self: *Self) !zlec.Token {
 
 const testing = std.testing;
 
+test "c tests" {
+    _ = @import("test_lexer.zig");
+}
+
 test "lexer init" {
     var buffer: [1]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);

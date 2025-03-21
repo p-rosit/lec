@@ -28,11 +28,25 @@ pub fn next(self: *Self) !zlec.Token {
 const testing = std.testing;
 
 test "lexer init" {
-    var buffer: [5]u8 = undefined;
+    var buffer: [1]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
 
     const data = "";
     var reader = try gci.ReaderString.init(data);
 
     _ = try Self.init(reader.interface(), arena);
+}
+
+test "lexer next plus" {
+    var buffer: [1]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "\n+";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(1, token.inner.length);
+    try testing.expectEqualStrings("+", &buffer);
 }

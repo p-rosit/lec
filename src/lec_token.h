@@ -23,6 +23,8 @@ enum LecTokenType {
     LEC_TOKEN_TYPE_R_BRACK, // ]
     LEC_TOKEN_TYPE_L_BRACE, // {
     LEC_TOKEN_TYPE_R_BRACE, // }
+    LEC_TOKEN_TYPE_L_ANGLE, // <
+    LEC_TOKEN_TYPE_R_ANGLE, // >
 
     LEC_TOKEN_TYPE_DOT, // .
     LEC_TOKEN_TYPE_COMMA, // ,

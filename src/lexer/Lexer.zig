@@ -7,7 +7,7 @@ const Self = @This();
 
 inner: lib.LecLexer,
 
-pub fn init(arena: zlec.Arena, reader: gci.InterfaceReader) !Self {
+pub fn init(reader: gci.InterfaceReader, arena: zlec.Arena) !Self {
     var self: Self = undefined;
     const err = lib.lec_lexer_init(
         &self.inner,
@@ -34,5 +34,5 @@ test "lexer init" {
     const data = "";
     var reader = try gci.ReaderString.init(data);
 
-    _ = try Self.init(arena, reader.interface());
+    _ = try Self.init(reader.interface(), arena);
 }

@@ -78,23 +78,64 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
                     token->type = LEC_TOKEN_TYPE_MINUS;
                     break;
                 case '*':
+                    lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_MUL;
+                    break;
+                case '/':
+                    lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_DIV;
+                    break;
                 case '(':
+                    lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_L_PAREN;
+                    break;
                 case ')':
+                    lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_R_PAREN;
+                    break;
                 case '[':
+                    lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_L_BRACK;
+                    break;
                 case ']':
+                    lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_R_BRACK;
+                    break;
                 case '{':
+                    lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_L_BRACE;
+                    break;
                 case '}':
+                    lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_R_BRACE;
+                    break;
                 case '<':
+                    lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_L_ANGLE;
+                    break;
                 case '>':
+                    lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_R_ANGLE;
+                    break;
                 case '.':
                     lexer->state = LEC_STATE_END;
                     token->type = LEC_TOKEN_TYPE_DOT;
                     break;
                 case ',':
+                    lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_COMMA;
+                    break;
                 case '?':
+                    lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_QUESTION;
+                    break;
                 case ':':
+                    lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_COLON;
+                    break;
                 case ';':
                     lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_SEMICOLON;
                     break;
                 default:
                     assert(0); // TODO: now what?

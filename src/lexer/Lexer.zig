@@ -20,7 +20,7 @@ pub fn init(reader: gci.InterfaceReader, arena: zlec.Arena) !Self {
 
 pub fn next(self: *Self) !zlec.Token {
     var token: zlec.Token = undefined;
-    const err = lib.lec_token_next(&self.inner, &token.inner);
+    const err = lib.lec_lexer_next(&self.inner, &token.inner);
     try internal.enumToError(err);
     return token;
 }

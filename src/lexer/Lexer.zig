@@ -115,7 +115,7 @@ test "lexer next div" {
     var buffer: [1]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
 
-    const data = "/";
+    const data = "/ ";
     var reader = try gci.ReaderString.init(data);
 
     var lexer = try Self.init(reader.interface(), arena);
@@ -364,4 +364,19 @@ test "lexer next semicolon" {
     try testing.expectEqual(0, token.inner.arena_start);
     try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
+}
+
+test "lexer next comment" {
+    var buffer: [10]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "\t//\tcomment\n";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.comment, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(1, token.inner.byte_start);
+    try testing.expectEqual(10, token.inner.length);
 }

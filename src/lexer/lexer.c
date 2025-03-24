@@ -87,8 +87,7 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
                     token->type = LEC_TOKEN_TYPE_MUL;
                     break;
                 case '/':
-                    lexer->state = LEC_STATE_END;
-                    token->type = LEC_TOKEN_TYPE_DIV;
+                    lexer->state = LEC_STATE_COMMENT_START;
                     break;
                 case '=':
                     lexer->state = LEC_STATE_ASSIGN;
@@ -185,12 +184,28 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
                 token->type = LEC_TOKEN_TYPE_R_ANGLE;
             }
             break;
+        case (LEC_STATE_COMMENT_START):
+            if (c == '/') {
+                lexer->state = LEC_STATE_COMMENT;
+                token->type = LEC_TOKEN_TYPE_COMMENT;
+            } else {
+                lexer->buffer_char = c;
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_DIV;
+            }
+            break;
+        case (LEC_STATE_COMMENT):
+            if (c == '\n') {
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_COMMENT;
+            }
+            break;
         case (LEC_STATE_END):
         case (LEC_STATE_MAX):
             assert(0);
     }
 
-    if (isspace((unsigned char) c)) {
+    if (lexer->state != LEC_STATE_COMMENT && isspace((unsigned char) c)) {
         lexer->state = LEC_STATE_END;
         return LEC_ERROR_OK;
     }

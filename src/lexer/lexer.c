@@ -118,12 +118,10 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
                     token->type = LEC_TOKEN_TYPE_R_BRACE;
                     break;
                 case '<':
-                    lexer->state = LEC_STATE_END;
-                    token->type = LEC_TOKEN_TYPE_L_ANGLE;
+                    lexer->state = LEC_STATE_LESS;
                     break;
                 case '>':
-                    lexer->state = LEC_STATE_END;
-                    token->type = LEC_TOKEN_TYPE_R_ANGLE;
+                    lexer->state = LEC_STATE_GREAT;
                     break;
                 case '.':
                     lexer->state = LEC_STATE_END;
@@ -165,6 +163,26 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
                 lexer->buffer_char = c;
                 lexer->state = LEC_STATE_END;
                 token->type = LEC_TOKEN_TYPE_EQUAL;
+            }
+            break;
+        case (LEC_STATE_LESS):
+            if (c == '=') {
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_LEQ;
+            } else {
+                lexer->buffer_char = c;
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_L_ANGLE;
+            }
+            break;
+        case (LEC_STATE_GREAT):
+            if (c == '=') {
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_GEQ;
+            } else {
+                lexer->buffer_char = c;
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_R_ANGLE;
             }
             break;
         case (LEC_STATE_END):

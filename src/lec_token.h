@@ -16,6 +16,7 @@ enum LecTokenType {
     LEC_TOKEN_TYPE_MINUS, // -
     LEC_TOKEN_TYPE_MUL, // *
     LEC_TOKEN_TYPE_DIV, // /
+    LEC_TOKEN_TYPE_ASSIGN, // =
 
     LEC_TOKEN_TYPE_L_PAREN, // (
     LEC_TOKEN_TYPE_R_PAREN, // )

@@ -126,6 +126,21 @@ test "lexer next div" {
     try testing.expectEqual(1, token.inner.length);
 }
 
+test "lexer next assign" {
+    var buffer: [1]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "=";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.assign, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(1, token.inner.length);
+}
+
 test "lexer next l paren" {
     var buffer: [1]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);

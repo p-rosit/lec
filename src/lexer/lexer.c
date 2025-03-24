@@ -94,6 +94,10 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
                     lexer->state = LEC_STATE_END;
                     token->type = LEC_TOKEN_TYPE_DIV;
                     break;
+                case '=':
+                    lexer->state = LEC_STATE_END;
+                    token->type = LEC_TOKEN_TYPE_ASSIGN;
+                    break;
                 case '(':
                     lexer->state = LEC_STATE_END;
                     token->type = LEC_TOKEN_TYPE_L_PAREN;

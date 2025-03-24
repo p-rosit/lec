@@ -130,7 +130,7 @@ test "lexer next assign" {
     var buffer: [1]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
 
-    const data = "=";
+    const data = "= ";
     var reader = try gci.ReaderString.init(data);
 
     var lexer = try Self.init(reader.interface(), arena);

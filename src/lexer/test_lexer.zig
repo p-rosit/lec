@@ -153,7 +153,7 @@ test "lexer next assign" {
     const arena_init = lib.lec_arena_init(&arena, &buffer, buffer.len);
     try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), arena_init);
 
-    const data = "=";
+    const data = "= ";
     var reader: lib.GciReaderString = undefined;
     const reader_init = lib.gci_reader_string_init(&reader, data.ptr, data.len);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), reader_init);

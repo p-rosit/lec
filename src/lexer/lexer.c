@@ -70,10 +70,6 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
         lexer->buffer_char = EOF;
     }
 
-    if (isspace((unsigned char) c)) {
-        lexer->state = LEC_STATE_END;
-        return LEC_ERROR_OK;
-    }
 
     switch (lexer->state) {
         case (LEC_STATE_START):
@@ -95,8 +91,7 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
                     token->type = LEC_TOKEN_TYPE_DIV;
                     break;
                 case '=':
-                    lexer->state = LEC_STATE_END;
-                    token->type = LEC_TOKEN_TYPE_ASSIGN;
+                    lexer->state = LEC_STATE_ASSIGN;
                     break;
                 case '(':
                     lexer->state = LEC_STATE_END;
@@ -154,9 +149,32 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
                     assert(0); // TODO: now what?
             }
             break;
+        case (LEC_STATE_ASSIGN):
+            if (c == '=') {
+                lexer->state = LEC_STATE_EQUAL;
+            } else {
+                lexer->buffer_char = c;
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_ASSIGN;
+            }
+            break;
+        case (LEC_STATE_EQUAL):
+            if (c == '=') {
+                return LEC_ERROR_THREEQUAL;
+            } else {
+                lexer->buffer_char = c;
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_EQUAL;
+            }
+            break;
         case (LEC_STATE_END):
         case (LEC_STATE_MAX):
             assert(0);
+    }
+
+    if (isspace((unsigned char) c)) {
+        lexer->state = LEC_STATE_END;
+        return LEC_ERROR_OK;
     }
 
     enum LecError err = lec_arena_add(&lexer->arena, c);

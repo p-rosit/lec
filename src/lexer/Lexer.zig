@@ -53,13 +53,15 @@ test "lexer next single char" {
 
     const token1 = try lexer.next();
     try testing.expectEqual(TokenType.minus, token1.type());
-    try testing.expectEqual(0, token1.inner.start);
+    try testing.expectEqual(0, token1.inner.arena_start);
+    try testing.expectEqual(1, token1.inner.byte_start);
     try testing.expectEqual(1, token1.inner.length);
     try testing.expectEqualStrings("-", buffer[0..1]);
 
     const token2 = try lexer.next();
     try testing.expectEqual(TokenType.dot, token2.type());
-    try testing.expectEqual(1, token2.inner.start);
+    try testing.expectEqual(1, token2.inner.arena_start);
+    try testing.expectEqual(2, token2.inner.byte_start);
     try testing.expectEqual(1, token2.inner.length);
     try testing.expectEqualStrings(".", buffer[1..2]);
 }
@@ -74,7 +76,8 @@ test "lexer next plus" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.plus, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }
 
@@ -88,7 +91,8 @@ test "lexer next minus" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.minus, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }
 
@@ -102,7 +106,8 @@ test "lexer next mul" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.mul, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }
 
@@ -116,7 +121,8 @@ test "lexer next div" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.div, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }
 
@@ -130,7 +136,8 @@ test "lexer next l paren" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.l_paren, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }
 
@@ -144,7 +151,8 @@ test "lexer next r paren" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.r_paren, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }
 
@@ -158,7 +166,8 @@ test "lexer next l brack" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.l_brack, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }
 
@@ -172,7 +181,8 @@ test "lexer next r brack" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.r_brack, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }
 
@@ -186,7 +196,8 @@ test "lexer next l brace" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.l_brace, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }
 
@@ -200,7 +211,8 @@ test "lexer next r brace" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.r_brace, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }
 
@@ -214,7 +226,8 @@ test "lexer next l angle" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.l_angle, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }
 
@@ -228,7 +241,8 @@ test "lexer next r angle" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.r_angle, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }
 
@@ -242,7 +256,8 @@ test "lexer next dot" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.dot, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }
 
@@ -256,7 +271,8 @@ test "lexer next question" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.question, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }
 
@@ -270,7 +286,8 @@ test "lexer next colon" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.colon, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }
 
@@ -284,6 +301,7 @@ test "lexer next semicolon" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.semicolon, token.type());
-    try testing.expectEqual(0, token.inner.start);
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
 }

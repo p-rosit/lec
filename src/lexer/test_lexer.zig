@@ -36,7 +36,8 @@ test "lexer next single char" {
     const next1_err = lib.lec_lexer_next(&lexer, &token1);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next1_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_MINUS), token1.type);
-    try testing.expectEqual(0, token1.start);
+    try testing.expectEqual(0, token1.arena_start);
+    try testing.expectEqual(1, token1.byte_start);
     try testing.expectEqual(1, token1.length);
     try testing.expectEqualStrings("-", buffer[0..1]);
 
@@ -44,7 +45,8 @@ test "lexer next single char" {
     const next2_err = lib.lec_lexer_next(&lexer, &token2);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next2_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_DOT), token2.type);
-    try testing.expectEqual(1, token2.start);
+    try testing.expectEqual(1, token2.arena_start);
+    try testing.expectEqual(2, token2.byte_start);
     try testing.expectEqual(1, token2.length);
     try testing.expectEqualStrings(".", buffer[1..2]);
 }
@@ -68,7 +70,8 @@ test "lexer next plus" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_PLUS), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -91,7 +94,8 @@ test "lexer next minus" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_MINUS), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -114,7 +118,8 @@ test "lexer next mul" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_MUL), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -137,7 +142,8 @@ test "lexer next div" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_DIV), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -160,7 +166,8 @@ test "lexer next l paren" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_L_PAREN), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -183,7 +190,8 @@ test "lexer next r paren" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_R_PAREN), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -206,7 +214,8 @@ test "lexer next l brack" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_L_BRACK), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -229,7 +238,8 @@ test "lexer next r brack" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_R_BRACK), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -252,7 +262,8 @@ test "lexer next l brace" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_L_BRACE), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -275,7 +286,8 @@ test "lexer next r brace" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_R_BRACE), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -298,7 +310,8 @@ test "lexer next l angle" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_L_ANGLE), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -321,7 +334,8 @@ test "lexer next r angle" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_R_ANGLE), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -344,7 +358,8 @@ test "lexer next dot" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_DOT), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -367,7 +382,8 @@ test "lexer next comma" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_COMMA), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -390,7 +406,8 @@ test "lexer next question" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_QUESTION), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -413,7 +430,8 @@ test "lexer next colon" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_COLON), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }
 
@@ -436,6 +454,7 @@ test "lexer next semicolon" {
     const next_err = lib.lec_lexer_next(&lexer, &token);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_SEMICOLON), token.type);
-    try testing.expectEqual(0, token.start);
+    try testing.expectEqual(0, token.arena_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(1, token.length);
 }

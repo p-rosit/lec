@@ -10,6 +10,8 @@ enum LecError lec_lexer_init(struct LecLexer *lexer, struct GciInterfaceReader r
     if (lexer == NULL) { return LEC_ERROR_NULL; }
     
     lexer->state = LEC_STATE_START;
+    lexer->prev_arena_start = 0;
+    lexer->byte_position = 0;
     lexer->reader = reader;
     lexer->arena = arena;
     lexer->buffer_char = EOF;
@@ -22,20 +24,26 @@ enum LecError lec_lexer_next(struct LecLexer *lexer, struct LecToken *token) {
     if (token == NULL) { return LEC_ERROR_NULL; }
 
     token->type = LEC_TOKEN_TYPE_UNKNOWN;
-    token->start = lexer->arena.position;
+    token->arena_start = lexer->arena.position;
+    token->byte_start = lexer->byte_position;
     token->length = 0;
 
     if (lexer->state != LEC_STATE_START) {
-        token->start = lexer->prev_start;
+        token->arena_start = lexer->prev_arena_start;
+        token->byte_start = lexer->byte_position - (lexer->arena.position - lexer->prev_arena_start);
     } else {
-        lexer->prev_start = lexer->arena.position;
+        lexer->prev_arena_start = lexer->arena.position;
 
         char c = lexer->buffer_char == EOF ? ' ' : (char) lexer->buffer_char;
         while (isspace((unsigned char) c)) {
             size_t length = gci_reader_read(lexer->reader, &c, 1);
             if (length != 1) { return LEC_ERROR_READER; }
+
             lexer->buffer_char = c;
+            lexer->byte_position += 1;
         }
+
+        token->byte_start = lexer->byte_position - 1;
     }
 
     while (lexer->state != LEC_STATE_END) {
@@ -44,7 +52,7 @@ enum LecError lec_lexer_next(struct LecLexer *lexer, struct LecToken *token) {
     }
 
     lexer->state = LEC_STATE_START;
-    token->length = lexer->arena.position - token->start;
+    token->length = lexer->arena.position - token->arena_start;
     return LEC_ERROR_OK;
 }
 
@@ -56,6 +64,7 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
     if (lexer->buffer_char == EOF) {
         size_t length = gci_reader_read(lexer->reader, &c, 1);
         if (length != 1) { return LEC_ERROR_READER; }
+        lexer->byte_position += 1;
     } else {
         c = (char) lexer->buffer_char;
         lexer->buffer_char = EOF;

@@ -36,7 +36,8 @@ enum LecTokenType {
 };
 
 struct LecToken {
-    size_t start;
+    size_t arena_start;
+    size_t byte_start;
     size_t length;
     enum LecTokenType type;
 };

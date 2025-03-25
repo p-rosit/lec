@@ -1,10 +1,12 @@
 #include <assert.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <stdbool.h>
 #include <lec_lexer.h>
 #include <lec_internal.h>
 
 enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecToken *token);
+enum LecError lec_internal_lexer_escape(struct LecLexer *lexer, struct LecToken *token, char c);
 
 enum LecError lec_lexer_init(struct LecLexer *lexer, struct GciInterfaceReader reader, struct LecArena arena) {
     if (lexer == NULL) { return LEC_ERROR_NULL; }
@@ -70,7 +72,7 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
         lexer->buffer_char = EOF;
     }
 
-
+    bool skip_char = false;
     switch (lexer->state) {
         case (LEC_STATE_START):
             switch (c) {
@@ -142,6 +144,16 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
                     lexer->state = LEC_STATE_END;
                     token->type = LEC_TOKEN_TYPE_SEMICOLON;
                     break;
+                case '"':
+                    skip_char = true;
+                    lexer->state = LEC_STATE_STRING;
+                    token->byte_start = lexer->byte_position;
+                    break;
+                case '\'':
+                    skip_char = true;
+                    lexer->state = LEC_STATE_CHAR;
+                    token->byte_start = lexer->byte_position;
+                    break;
                 default:
                     assert(0); // TODO: now what?
             }
@@ -200,18 +212,99 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
                 token->type = LEC_TOKEN_TYPE_COMMENT;
             }
             break;
+        case (LEC_STATE_CHAR):
+            if (c == '\\') {
+                skip_char = true;
+                lexer->state = LEC_STATE_CHAR_ESCAPED;
+            }
+            if (c == '\'') {
+                skip_char = true;
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_CHAR;
+            }
+            break;
+        case (LEC_STATE_STRING):
+            if (c == '\\') {
+                skip_char = true;
+                lexer->state = LEC_STATE_STRING_ESCAPED;
+            }
+            if (c == '"') {
+                skip_char = true;
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_STRING;
+            }
+            break;
+        case (LEC_STATE_CHAR_ESCAPED):
+        case (LEC_STATE_CHAR_ESCAPED_X):
+        case (LEC_STATE_CHAR_ESCAPED_U):
+        case (LEC_STATE_STRING_ESCAPED):
+        case (LEC_STATE_STRING_ESCAPED_X):
+        case (LEC_STATE_STRING_ESCAPED_U): {
+            skip_char = true;
+            enum LecError err = lec_internal_lexer_escape(lexer, token, c);
+            if (err) { return err; }
+            break;
+        }
         case (LEC_STATE_END):
         case (LEC_STATE_MAX):
             assert(0);
     }
 
-    if (lexer->state != LEC_STATE_COMMENT && isspace((unsigned char) c)) {
+    bool allow_whitespace = (
+        lexer->state == LEC_STATE_COMMENT
+        || lexer->state == LEC_STATE_CHAR
+        || lexer->state == LEC_STATE_CHAR_ESCAPED
+        || lexer->state == LEC_STATE_STRING
+        || lexer->state == LEC_STATE_STRING_ESCAPED
+    );
+    if (!allow_whitespace && isspace((unsigned char) c)) {
         lexer->state = LEC_STATE_END;
         return LEC_ERROR_OK;
     }
 
-    enum LecError err = lec_arena_add(&lexer->arena, c);
-    if (err) { return err; }
+    if (!skip_char) {
+        enum LecError err = lec_arena_add(&lexer->arena, c);
+        if (err) { return err; }
+    }
+
+    return LEC_ERROR_OK;
+}
+
+enum LecError lec_internal_lexer_escape(struct LecLexer *lexer, struct LecToken *token, char c) {
+    assert(lexer != NULL);
+    assert(token != NULL);
+
+    assert(
+        lexer->state == LEC_STATE_CHAR_ESCAPED
+        || lexer->state == LEC_STATE_CHAR_ESCAPED_X
+        || lexer->state == LEC_STATE_CHAR_ESCAPED_U
+        || lexer->state == LEC_STATE_STRING_ESCAPED
+        || lexer->state == LEC_STATE_STRING_ESCAPED_X
+        || lexer->state == LEC_STATE_STRING_ESCAPED_U
+    );
+
+    if (lexer->state == LEC_STATE_CHAR_ESCAPED || lexer->state == LEC_STATE_STRING_ESCAPED) {
+        if (c == 't') {
+            c = '\t';
+        }
+
+        enum LecError err = lec_arena_add(&lexer->arena, c);
+        if (err) { return err; }
+
+        if (lexer->state == LEC_STATE_CHAR_ESCAPED) {
+            lexer->state = LEC_STATE_CHAR;
+        } else if (lexer->state == LEC_STATE_STRING_ESCAPED) {
+            lexer->state = LEC_STATE_STRING;
+        } else {
+            assert(false);
+        }
+    } else if (lexer->state == LEC_STATE_CHAR_ESCAPED_X || lexer->state == LEC_STATE_STRING_ESCAPED_X) {
+        assert(false);
+    } else if (lexer->state == LEC_STATE_CHAR_ESCAPED_U || lexer->state == LEC_STATE_STRING_ESCAPED_U) {
+        assert(false);
+    } else {
+        assert(false);
+    }
 
     return LEC_ERROR_OK;
 }

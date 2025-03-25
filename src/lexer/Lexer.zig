@@ -380,3 +380,36 @@ test "lexer next comment" {
     try testing.expectEqual(1, token.inner.byte_start);
     try testing.expectEqual(10, token.inner.length);
 }
+
+test "lexer next char" {
+    var buffer: [4]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "' \\t:)'";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const err = lexer.next();
+    const token = try err;
+    try testing.expectEqual(TokenType.char, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(1, token.inner.byte_start);
+    try testing.expectEqual(4, token.inner.length);
+    try testing.expectEqualStrings(" \t:)", &buffer);
+}
+
+test "lexer next string" {
+    var buffer: [4]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "\" \\t:)\"";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.string, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(1, token.inner.byte_start);
+    try testing.expectEqual(4, token.inner.length);
+    try testing.expectEqualStrings(" \t:)", &buffer);
+}

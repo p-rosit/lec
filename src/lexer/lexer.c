@@ -290,7 +290,11 @@ enum LecError lec_internal_lexer_multi_char(struct LecLexer *lexer, struct LecTo
             break;
         case (LEC_STATE_MULTI_CHAR_COMMENT_START):
             if (c == '/') {
+                assert(lexer->arena.position > 0);
+                lexer->arena.position -= 1;
+                token->byte_start += 2;
                 lexer->state = LEC_STATE_COMMENT;
+                return LEC_ERROR_OK;
             } else {
                 token->type = LEC_TOKEN_TYPE_DIV;
                 lexer->state = LEC_STATE_END;

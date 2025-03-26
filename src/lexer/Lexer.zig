@@ -367,7 +367,7 @@ test "lexer next semicolon" {
 }
 
 test "lexer next comment" {
-    var buffer: [10]u8 = undefined;
+    var buffer: [8]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
 
     const data = "\t//\tcomment\n";
@@ -377,8 +377,9 @@ test "lexer next comment" {
     const token = try lexer.next();
     try testing.expectEqual(TokenType.comment, token.type());
     try testing.expectEqual(0, token.inner.arena_start);
-    try testing.expectEqual(1, token.inner.byte_start);
-    try testing.expectEqual(10, token.inner.length);
+    try testing.expectEqual(3, token.inner.byte_start);
+    try testing.expectEqual(8, token.inner.length);
+    try testing.expectEqualStrings("\tcomment", &buffer);
 }
 
 test "lexer next char" {

@@ -8,26 +8,47 @@
 enum LecState {
     LEC_STATE_START,
 
-    LEC_STATE_ASSIGN,
-    LEC_STATE_EQUAL,
-    LEC_STATE_LESS,
-    LEC_STATE_GREAT,
-
+    LEC_STATE_MULTI_CHAR,
     LEC_STATE_CHAR,
-    LEC_STATE_CHAR_ESCAPED,
-    LEC_STATE_CHAR_ESCAPED_X,
-    LEC_STATE_CHAR_ESCAPED_U,
-
     LEC_STATE_STRING,
-    LEC_STATE_STRING_ESCAPED,
-    LEC_STATE_STRING_ESCAPED_X,
-    LEC_STATE_STRING_ESCAPED_U,
-
-    LEC_STATE_COMMENT_START,
+    LEC_STATE_NUMBER,
     LEC_STATE_COMMENT,
 
     LEC_STATE_END,
     LEC_STATE_MAX,
+};
+
+enum LecStateMultiChar {
+    LEC_STATE_MULTI_CHAR_FIRST          = 1,
+    LEC_STATE_MULTI_CHAR_ASSIGN         = 2,
+    LEC_STATE_MULTI_CHAR_LESS           = 3,
+    LEC_STATE_MULTI_CHAR_GREAT          = 4,
+    LEC_STATE_MULTI_CHAR_PLUS           = 5,
+    LEC_STATE_MULTI_CHAR_MINUS          = 6,
+    LEC_STATE_MULTI_CHAR_COMMENT_START  = 7,
+    LEC_STATE_MULTI_CHAR_LAST           = 8,
+};
+
+enum LecStateChars {
+    LEC_STATE_CHARS_FIRST       = 9,
+    LEC_STATE_CHARS             = 10,
+    LEC_STATE_CHARS_ESCAPED     = 11,
+    LEC_STATE_CHARS_ESCAPED_X   = 12,
+    LEC_STATE_CHARS_ESCAPED_U   = 13,
+    LEC_STATE_CHARS_LAST        = 14,
+};
+
+enum LecStateNumber {
+    LEC_STATE_NUMBER_FIRST          = 15,
+    LEC_STATE_NUMBER_NEGATIVE       = 16,
+    LEC_STATE_NUMBER_ZERO           = 17,
+    LEC_STATE_NUMBER_WHOLE          = 18,
+    LEC_STATE_NUMBER_POINT          = 19,
+    LEC_STATE_NUMBER_FRACTION       = 20,
+    LEC_STATE_NUMBER_E              = 21,
+    LEC_STATE_NUMBER_EXPONENT_SIGN  = 22,
+    LEC_STATE_NUMBER_EXPONENT       = 23,
+    LEC_STATE_NUMBER_LAST           = 24,
 };
 
 struct LecLexer {
@@ -36,6 +57,11 @@ struct LecLexer {
     size_t prev_arena_start;
     size_t byte_position;
     enum LecState state;
+    union {
+        enum LecStateMultiChar multi_state;
+        enum LecStateChars char_state;
+        enum LecStateNumber number_state;
+    } sub_state;
     int buffer_char;
 };
 

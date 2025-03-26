@@ -20,6 +20,8 @@ enum LecTokenType {
     LEC_TOKEN_TYPE_EQUAL, // ==
     LEC_TOKEN_TYPE_LEQ, // <=
     LEC_TOKEN_TYPE_GEQ, // >=
+    LEC_TOKEN_TYPE_INC, // ++
+    LEC_TOKEN_TYPE_DEC, // --
 
     LEC_TOKEN_TYPE_L_PAREN, // (
     LEC_TOKEN_TYPE_R_PAREN, // )

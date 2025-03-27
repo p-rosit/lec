@@ -42,6 +42,8 @@ test "lexer init" {
     _ = try Self.init(reader.interface(), arena);
 }
 
+// Section: Single char tokens -------------------------------------------------
+
 test "lexer next single char" {
     var buffer: [2]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
@@ -139,51 +141,6 @@ test "lexer next assign" {
     try testing.expectEqual(0, token.inner.arena_start);
     try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
-}
-
-test "lexer next equal" {
-    var buffer: [2]u8 = undefined;
-    const arena = try zlec.Arena.init(&buffer);
-
-    const data = "==";
-    var reader = try gci.ReaderString.init(data);
-
-    var lexer = try Self.init(reader.interface(), arena);
-    const token = try lexer.next();
-    try testing.expectEqual(TokenType.equal, token.type());
-    try testing.expectEqual(0, token.inner.arena_start);
-    try testing.expectEqual(0, token.inner.byte_start);
-    try testing.expectEqual(2, token.inner.length);
-}
-
-test "lexer leq" {
-    var buffer: [2]u8 = undefined;
-    const arena = try zlec.Arena.init(&buffer);
-
-    const data = "<=";
-    var reader = try gci.ReaderString.init(data);
-
-    var lexer = try Self.init(reader.interface(), arena);
-    const token = try lexer.next();
-    try testing.expectEqual(TokenType.leq, token.type());
-    try testing.expectEqual(0, token.inner.arena_start);
-    try testing.expectEqual(0, token.inner.byte_start);
-    try testing.expectEqual(2, token.inner.length);
-}
-
-test "lexer geq" {
-    var buffer: [2]u8 = undefined;
-    const arena = try zlec.Arena.init(&buffer);
-
-    const data = ">=";
-    var reader = try gci.ReaderString.init(data);
-
-    var lexer = try Self.init(reader.interface(), arena);
-    const token = try lexer.next();
-    try testing.expectEqual(TokenType.geq, token.type());
-    try testing.expectEqual(0, token.inner.arena_start);
-    try testing.expectEqual(0, token.inner.byte_start);
-    try testing.expectEqual(2, token.inner.length);
 }
 
 test "lexer next l paren" {
@@ -366,6 +323,55 @@ test "lexer next semicolon" {
     try testing.expectEqual(1, token.inner.length);
 }
 
+// Section: Multi char tokens --------------------------------------------------
+
+test "lexer next equal" {
+    var buffer: [2]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "==";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.equal, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(2, token.inner.length);
+}
+
+test "lexer leq" {
+    var buffer: [2]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "<=";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.leq, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(2, token.inner.length);
+}
+
+test "lexer geq" {
+    var buffer: [2]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = ">=";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.geq, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(2, token.inner.length);
+}
+
+// Section: Comment ------------------------------------------------------------
+
 test "lexer next comment" {
     var buffer: [8]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
@@ -381,6 +387,8 @@ test "lexer next comment" {
     try testing.expectEqual(8, token.inner.length);
     try testing.expectEqualStrings("\tcomment", &buffer);
 }
+
+// Section: String and char ----------------------------------------------------
 
 test "lexer next char" {
     var buffer: [4]u8 = undefined;

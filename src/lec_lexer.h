@@ -40,15 +40,16 @@ enum LecStateChars {
 
 enum LecStateNumber {
     LEC_STATE_NUMBER_FIRST          = 15,
-    LEC_STATE_NUMBER_NEGATIVE       = 16,
-    LEC_STATE_NUMBER_ZERO           = 17,
-    LEC_STATE_NUMBER_WHOLE          = 18,
-    LEC_STATE_NUMBER_POINT          = 19,
-    LEC_STATE_NUMBER_FRACTION       = 20,
-    LEC_STATE_NUMBER_E              = 21,
-    LEC_STATE_NUMBER_EXPONENT_SIGN  = 22,
-    LEC_STATE_NUMBER_EXPONENT       = 23,
-    LEC_STATE_NUMBER_LAST           = 24,
+    LEC_STATE_NUMBER_ZERO           = 16,
+    LEC_STATE_NUMBER_WHOLE          = 17,
+    LEC_STATE_NUMBER_POINT          = 18,
+    LEC_STATE_NUMBER_FRACTION       = 19,
+    LEC_STATE_NUMBER_E              = 20,
+    LEC_STATE_NUMBER_EXPONENT_SIGN  = 21,
+    LEC_STATE_NUMBER_EXPONENT       = 22,
+    LEC_STATE_NUMBER_HEX            = 23,
+    LEC_STATE_NUMBER_BIN            = 24,
+    LEC_STATE_NUMBER_LAST           = 25,
 };
 
 struct LecLexer {

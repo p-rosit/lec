@@ -6,7 +6,7 @@ enum LecError {
     LEC_ERROR_NULL = 1,
     LEC_ERROR_BUFFER = 2,
     LEC_ERROR_READER = 3,
-    LEC_ERROR_THREEQUAL = 4,
+    LEC_ERROR_NUMBER = 4,
 };
 
 #endif

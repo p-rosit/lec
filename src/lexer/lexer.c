@@ -125,106 +125,104 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
 enum LecError lec_internal_lexer_start(struct LecLexer *lexer, struct LecToken *token, char c) {
     bool skip_char = false;
 
-    // if (isalpha((unsigned char) c) || c == '_') {
-    //     lexer->state = LEC_STATE_TEXT;
-    // } else if (isdigit((unsigned char) c) || c == '-') {
-    //     if (c == '-') {
-    //         lexer->state = LEC_STATE_NUMBER_NEGATIVE;
-    //     } else if (c == '0') {
-    //         lexer->state = LEC_STATE_NUMBER_ZERO;
-    //     } else {
-    //         assert(isdigit((unsigned char) c));
-    //         lexer->state = LEC_STATE_NUMBER_WHOLE;
-    //     }
-    // }
-
-    switch (c) {
-        case '+':
-            lexer->state = LEC_STATE_MULTI_CHAR;
-            lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_PLUS;
-            break;
-        case '-':
-            lexer->state = LEC_STATE_MULTI_CHAR;
-            lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_MINUS;
-            break;
-        case '*':
-            lexer->state = LEC_STATE_END;
-            token->type = LEC_TOKEN_TYPE_MUL;
-            break;
-        case '/':
-            lexer->state = LEC_STATE_MULTI_CHAR;
-            lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_COMMENT_START;
-            break;
-        case '=':
-            lexer->state = LEC_STATE_MULTI_CHAR;
-            lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_ASSIGN;
-            break;
-        case '(':
-            lexer->state = LEC_STATE_END;
-            token->type = LEC_TOKEN_TYPE_L_PAREN;
-            break;
-        case ')':
-            lexer->state = LEC_STATE_END;
-            token->type = LEC_TOKEN_TYPE_R_PAREN;
-            break;
-        case '[':
-            lexer->state = LEC_STATE_END;
-            token->type = LEC_TOKEN_TYPE_L_BRACK;
-            break;
-        case ']':
-            lexer->state = LEC_STATE_END;
-            token->type = LEC_TOKEN_TYPE_R_BRACK;
-            break;
-        case '{':
-            lexer->state = LEC_STATE_END;
-            token->type = LEC_TOKEN_TYPE_L_BRACE;
-            break;
-        case '}':
-            lexer->state = LEC_STATE_END;
-            token->type = LEC_TOKEN_TYPE_R_BRACE;
-            break;
-        case '<':
-            lexer->state = LEC_STATE_MULTI_CHAR;
-            lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_LESS;
-            break;
-        case '>':
-            lexer->state = LEC_STATE_MULTI_CHAR;
-            lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_GREAT;
-            break;
-        case '.':
-            lexer->state = LEC_STATE_END;
-            token->type = LEC_TOKEN_TYPE_DOT;
-            break;
-        case ',':
-            lexer->state = LEC_STATE_END;
-            token->type = LEC_TOKEN_TYPE_COMMA;
-            break;
-        case '?':
-            lexer->state = LEC_STATE_END;
-            token->type = LEC_TOKEN_TYPE_QUESTION;
-            break;
-        case ':':
-            lexer->state = LEC_STATE_END;
-            token->type = LEC_TOKEN_TYPE_COLON;
-            break;
-        case ';':
-            lexer->state = LEC_STATE_END;
-            token->type = LEC_TOKEN_TYPE_SEMICOLON;
-            break;
-        case '"':
-            skip_char = true;
-            lexer->state = LEC_STATE_STRING;
-            lexer->sub_state.char_state = LEC_STATE_CHARS;
-            token->byte_start = lexer->byte_position;
-            break;
-        case '\'':
-            skip_char = true;
-            lexer->state = LEC_STATE_CHAR;
-            lexer->sub_state.char_state = LEC_STATE_CHARS;
-            token->byte_start = lexer->byte_position;
-            break;
-        default:
-            assert(false); // TODO: now what?
+    if (isalpha((unsigned char) c) || c == '_') {
+        lexer->state = LEC_STATE_TEXT;
+    } else if (isdigit((unsigned char) c)) {
+        lexer->state = LEC_STATE_NUMBER;
+        if (c == '0') {
+            lexer->sub_state.number_state = LEC_STATE_NUMBER_ZERO;
+        } else {
+            lexer->sub_state.number_state = LEC_STATE_NUMBER_WHOLE;
+        }
+    } else {
+        switch (c) {
+            case '+':
+                lexer->state = LEC_STATE_MULTI_CHAR;
+                lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_PLUS;
+                break;
+            case '-':
+                lexer->state = LEC_STATE_MULTI_CHAR;
+                lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_MINUS;
+                break;
+            case '*':
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_MUL;
+                break;
+            case '/':
+                lexer->state = LEC_STATE_MULTI_CHAR;
+                lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_COMMENT_START;
+                break;
+            case '=':
+                lexer->state = LEC_STATE_MULTI_CHAR;
+                lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_ASSIGN;
+                break;
+            case '(':
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_L_PAREN;
+                break;
+            case ')':
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_R_PAREN;
+                break;
+            case '[':
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_L_BRACK;
+                break;
+            case ']':
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_R_BRACK;
+                break;
+            case '{':
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_L_BRACE;
+                break;
+            case '}':
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_R_BRACE;
+                break;
+            case '<':
+                lexer->state = LEC_STATE_MULTI_CHAR;
+                lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_LESS;
+                break;
+            case '>':
+                lexer->state = LEC_STATE_MULTI_CHAR;
+                lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_GREAT;
+                break;
+            case '.':
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_DOT;
+                break;
+            case ',':
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_COMMA;
+                break;
+            case '?':
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_QUESTION;
+                break;
+            case ':':
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_COLON;
+                break;
+            case ';':
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_SEMICOLON;
+                break;
+            case '"':
+                skip_char = true;
+                lexer->state = LEC_STATE_STRING;
+                lexer->sub_state.char_state = LEC_STATE_CHARS;
+                token->byte_start = lexer->byte_position;
+                break;
+            case '\'':
+                skip_char = true;
+                lexer->state = LEC_STATE_CHAR;
+                lexer->sub_state.char_state = LEC_STATE_CHARS;
+                token->byte_start = lexer->byte_position;
+                break;
+            default:
+                assert(false); // TODO: now what?
+        }
     }
     
     if (!skip_char) {
@@ -362,6 +360,94 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
     assert(LEC_STATE_NUMBER_FIRST < lexer->sub_state.char_state);
     assert(lexer->sub_state.char_state < LEC_STATE_NUMBER_LAST);
 
+    switch (c) {
+        case (LEC_STATE_NUMBER_ZERO):
+            if (c == '.') {
+                lexer->sub_state.number_state = LEC_STATE_NUMBER_POINT;
+            } else if (c == 'e' || c == 'E') {
+                lexer->sub_state.number_state = LEC_STATE_NUMBER_E;
+            } else if (c == 'b') {
+                lexer->sub_state.number_state = LEC_STATE_NUMBER_BIN;
+            } else if (c == 'x') {
+                lexer->sub_state.number_state = LEC_STATE_NUMBER_HEX;
+            } else {
+                lexer->buffer_char = c;
+                return LEC_ERROR_NUMBER;
+            }
+            break;
+        case (LEC_STATE_NUMBER_WHOLE):
+            if (isdigit((unsigned char) c)) {
+                lexer->sub_state.number_state = LEC_STATE_NUMBER_WHOLE;
+            } else if (c == '.') {
+                lexer->sub_state.number_state = LEC_STATE_NUMBER_POINT;
+            } else if (c == 'e' || c == 'E') {
+                lexer->sub_state.number_state = LEC_STATE_NUMBER_E;
+            } else {
+                lexer->buffer_char = c;
+                return LEC_ERROR_NUMBER;
+            }
+            break;
+        case (LEC_STATE_NUMBER_POINT):
+            if (!isdigit((unsigned char) c)) {
+                lexer->buffer_char = c;
+                return LEC_ERROR_NUMBER;
+            }
+            lexer->sub_state.number_state = LEC_STATE_NUMBER_FRACTION;
+            break;
+        case (LEC_STATE_NUMBER_FRACTION):
+            if (isdigit((unsigned char) c)) {
+                lexer->sub_state.number_state = LEC_STATE_NUMBER_FRACTION;
+            } else if (c == 'e' || c == 'E') {
+                lexer->sub_state.number_state = LEC_STATE_NUMBER_E;
+            } else {
+                lexer->buffer_char = c;
+                return LEC_ERROR_NUMBER;
+            }
+            break;
+        case (LEC_STATE_NUMBER_E):
+            if (isdigit((unsigned char) c)) {
+                lexer->sub_state.number_state = LEC_STATE_NUMBER_EXPONENT;
+            } if (c == '+' || c == '-') {
+                lexer->sub_state.number_state = LEC_STATE_NUMBER_EXPONENT_SIGN;
+            } else {
+                lexer->buffer_char = c;
+                return LEC_ERROR_NUMBER;
+            }
+            break;
+        case (LEC_STATE_NUMBER_EXPONENT_SIGN):
+            if (!isdigit((unsigned char) c)) {
+                lexer->buffer_char = c;
+                return LEC_ERROR_NUMBER;
+            }
+            lexer->sub_state.number_state = LEC_STATE_NUMBER_EXPONENT;
+            break;
+        case (LEC_STATE_NUMBER_EXPONENT):
+            if (!isdigit((unsigned char) c)) {
+                lexer->buffer_char = c;
+                return LEC_ERROR_NUMBER;
+            }
+            break;
+        case (LEC_STATE_NUMBER_BIN):
+            if (c != '0' && c != '1') {
+                lexer->buffer_char = c;
+                return LEC_ERROR_NUMBER;
+            }
+            break;
+        case (LEC_STATE_NUMBER_HEX):
+            if (!isxdigit((unsigned char) c)) {
+                lexer->buffer_char = c;
+                return LEC_ERROR_NUMBER;
+            }
+            break;
+        case (LEC_STATE_NUMBER_FIRST):
+        case (LEC_STATE_NUMBER_LAST):
+            assert(false);
+    }
+
+    if (lexer->buffer_char == EOF) {
+        enum LecError err = lec_arena_add(&lexer->arena, c);
+        if (err) { return err; }
+    }
     return LEC_ERROR_OK;
 }
 

@@ -20,10 +20,12 @@ enum LecTokenType {
     LEC_TOKEN_TYPE_DIV, // /
     LEC_TOKEN_TYPE_ASSIGN, // =
     LEC_TOKEN_TYPE_EQUAL, // ==
+    LEC_TOKEN_TYPE_NEQ, // !=
     LEC_TOKEN_TYPE_LEQ, // <=
     LEC_TOKEN_TYPE_GEQ, // >=
     LEC_TOKEN_TYPE_INC, // ++
     LEC_TOKEN_TYPE_DEC, // --
+    LEC_TOKEN_TYPE_NOT, // !
 
     LEC_TOKEN_TYPE_L_PAREN, // (
     LEC_TOKEN_TYPE_R_PAREN, // )
@@ -39,6 +41,7 @@ enum LecTokenType {
     LEC_TOKEN_TYPE_QUESTION, // ?
     LEC_TOKEN_TYPE_COLON, // :
     LEC_TOKEN_TYPE_SEMICOLON, // ;
+    LEC_TOKEN_TYPE_PREPROC, // #
 
     LEC_TOKEN_TYPE_MAX,
 };

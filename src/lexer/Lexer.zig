@@ -323,6 +323,36 @@ test "lexer next semicolon" {
     try testing.expectEqual(1, token.inner.length);
 }
 
+test "lexer next not" {
+    var buffer: [1]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "! ";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.not, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(1, token.inner.length);
+}
+
+test "lexer next preprocess" {
+    var buffer: [1]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "#";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.preproc, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(1, token.inner.length);
+}
+
 // Section: Multi char tokens --------------------------------------------------
 
 test "lexer next equal" {
@@ -335,6 +365,21 @@ test "lexer next equal" {
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.equal, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(2, token.inner.length);
+}
+
+test "lexer next not equal" {
+    var buffer: [2]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "!=";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.neq, token.type());
     try testing.expectEqual(0, token.inner.arena_start);
     try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(2, token.inner.length);

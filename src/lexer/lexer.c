@@ -144,6 +144,10 @@ enum LecError lec_internal_lexer_start(struct LecLexer *lexer, struct LecToken *
                 lexer->state = LEC_STATE_MULTI_CHAR;
                 lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_MINUS;
                 break;
+            case '!':
+                lexer->state = LEC_STATE_MULTI_CHAR;
+                lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_NOT;
+                break;
             case '*':
                 lexer->state = LEC_STATE_END;
                 token->type = LEC_TOKEN_TYPE_MUL;
@@ -207,6 +211,10 @@ enum LecError lec_internal_lexer_start(struct LecLexer *lexer, struct LecToken *
             case ';':
                 lexer->state = LEC_STATE_END;
                 token->type = LEC_TOKEN_TYPE_SEMICOLON;
+                break;
+            case '#':
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_PREPROC;
                 break;
             case '"':
                 skip_char = true;
@@ -298,6 +306,15 @@ enum LecError lec_internal_lexer_multi_char(struct LecLexer *lexer, struct LecTo
                 lexer->state = LEC_STATE_END;
                 lexer->buffer_char = c;
             }
+            break;
+        case (LEC_STATE_MULTI_CHAR_NOT):
+            if (c == '=') {
+                token->type = LEC_TOKEN_TYPE_NEQ;
+            } else {
+                token->type = LEC_TOKEN_TYPE_NOT;
+                lexer->buffer_char = c;
+            }
+            lexer->state = LEC_STATE_END;
             break;
         case (LEC_STATE_MULTI_CHAR_FIRST):
         case (LEC_STATE_MULTI_CHAR_LAST):

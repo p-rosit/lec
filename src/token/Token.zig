@@ -15,8 +15,12 @@ pub const Type = enum {
     div,
     assign,
     equal,
+    neq,
     leq,
     geq,
+    inc,
+    dec,
+    not,
     l_paren,
     r_paren,
     l_brack,
@@ -30,6 +34,7 @@ pub const Type = enum {
     question,
     colon,
     semicolon,
+    preproc,
 
     pub fn fromCEnum(value: lib.LecTokenType) Type {
         return switch (value) {
@@ -46,8 +51,12 @@ pub const Type = enum {
             lib.LEC_TOKEN_TYPE_DIV => return .div,
             lib.LEC_TOKEN_TYPE_ASSIGN => return .assign,
             lib.LEC_TOKEN_TYPE_EQUAL => return .equal,
+            lib.LEC_TOKEN_TYPE_NEQ => return .neq,
             lib.LEC_TOKEN_TYPE_LEQ => return .leq,
             lib.LEC_TOKEN_TYPE_GEQ => return .geq,
+            lib.LEC_TOKEN_TYPE_INC => return .inc,
+            lib.LEC_TOKEN_TYPE_DEC => return .dec,
+            lib.LEC_TOKEN_TYPE_NOT => return .not,
             lib.LEC_TOKEN_TYPE_L_PAREN => return .l_paren,
             lib.LEC_TOKEN_TYPE_R_PAREN => return .r_paren,
             lib.LEC_TOKEN_TYPE_L_BRACK => return .l_brack,
@@ -61,6 +70,7 @@ pub const Type = enum {
             lib.LEC_TOKEN_TYPE_QUESTION => return .question,
             lib.LEC_TOKEN_TYPE_COLON => return .colon,
             lib.LEC_TOKEN_TYPE_SEMICOLON => return .semicolon,
+            lib.LEC_TOKEN_TYPE_PREPROC => return .preproc,
             else => unreachable,
         };
     }

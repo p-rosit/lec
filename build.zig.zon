@@ -25,7 +25,7 @@
     .dependencies = .{
         .gci = .{
             .url = "/home/pontus/clang/gci",
-            .hash = "12209a189931245ea78badc506f0ae5942d1a0684af9948b96dae1c28c377422ac4f",
+            .hash = "1220844c7c23a3a7dabf8e23587a5514480d628889676c7bfcf3d94ee03048f4f6a0",
         },
     },
     .paths = .{

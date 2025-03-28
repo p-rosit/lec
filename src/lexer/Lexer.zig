@@ -72,7 +72,7 @@ test "lexer next plus" {
     var buffer: [1]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
 
-    const data = "+ ";
+    const data = "+";
     var reader = try gci.ReaderString.init(data);
 
     var lexer = try Self.init(reader.interface(), arena);
@@ -87,7 +87,7 @@ test "lexer next minus" {
     var buffer: [1]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
 
-    const data = "- ";
+    const data = "-";
     var reader = try gci.ReaderString.init(data);
 
     var lexer = try Self.init(reader.interface(), arena);
@@ -117,7 +117,7 @@ test "lexer next div" {
     var buffer: [1]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
 
-    const data = "/ ";
+    const data = "/";
     var reader = try gci.ReaderString.init(data);
 
     var lexer = try Self.init(reader.interface(), arena);
@@ -132,7 +132,7 @@ test "lexer next assign" {
     var buffer: [1]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
 
-    const data = "= ";
+    const data = "=";
     var reader = try gci.ReaderString.init(data);
 
     var lexer = try Self.init(reader.interface(), arena);
@@ -237,7 +237,7 @@ test "lexer next l angle" {
     var buffer: [1]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
 
-    const data = "< ";
+    const data = "<";
     var reader = try gci.ReaderString.init(data);
 
     var lexer = try Self.init(reader.interface(), arena);
@@ -252,7 +252,7 @@ test "lexer next r angle" {
     var buffer: [1]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
 
-    const data = "> ";
+    const data = ">";
     var reader = try gci.ReaderString.init(data);
 
     var lexer = try Self.init(reader.interface(), arena);
@@ -327,7 +327,7 @@ test "lexer next not" {
     var buffer: [1]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
 
-    const data = "! ";
+    const data = "!";
     var reader = try gci.ReaderString.init(data);
 
     var lexer = try Self.init(reader.interface(), arena);

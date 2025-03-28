@@ -926,6 +926,18 @@ test "lexer next char" {
     try testing.expectEqualStrings(" \t:)", &buffer);
 }
 
+test "lexer next char eof" {
+    var buffer: [1]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "'";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const err = lexer.next();
+    try testing.expectError(error.Unterminated, err);
+}
+
 test "lexer next char fail" {
     var buffer: [1]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
@@ -964,6 +976,18 @@ test "lexer next string" {
     try testing.expectEqual(1, token.inner.byte_start);
     try testing.expectEqual(4, token.inner.length);
     try testing.expectEqualStrings(" \t:)", &buffer);
+}
+
+test "lexer next string eof" {
+    var buffer: [4]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "\"";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const err = lexer.next();
+    try testing.expectError(error.Unterminated, err);
 }
 
 test "lexer next string fail" {

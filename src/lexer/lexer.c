@@ -496,7 +496,7 @@ enum LecError lec_internal_lexer_comment(struct LecLexer *lexer, struct LecToken
 enum LecError lec_internal_lexer_eof(struct LecLexer *lexer, struct LecToken *token) {
     switch (lexer->state) {
         case (LEC_STATE_START): {
-            return LEC_ERROR_READER;
+            return LEC_ERROR_EOF;
         }
         case (LEC_STATE_MULTI_CHAR): {
             assert(LEC_STATE_MULTI_CHAR_FIRST < lexer->sub_state.char_state);

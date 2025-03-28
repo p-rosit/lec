@@ -13,6 +13,7 @@ pub fn enumToError(err: lib.LecError) !void {
         lib.LEC_ERROR_NULL => return error.Null,
         lib.LEC_ERROR_BUFFER => return error.Buffer,
         lib.LEC_ERROR_READER => return error.Reader,
+        lib.LEC_ERROR_EOF => return error.Eof,
         lib.LEC_ERROR_NUMBER => return error.Number,
         lib.LEC_ERROR_UNTERMINATED => return error.Unterminated,
         else => return error.Unknown,

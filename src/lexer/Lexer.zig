@@ -42,6 +42,34 @@ test "lexer init" {
     _ = try Self.init(reader.interface(), arena);
 }
 
+// Section: Empty --------------------------------------------------------------
+
+test "lexer empty" {
+    var buffer: [2]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+
+    const err = lexer.next();
+    try testing.expectError(error.Eof, err);
+}
+
+test "lexer whitespace" {
+    var buffer: [2]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "\n\t   \n";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+
+    const err = lexer.next();
+    try testing.expectError(error.Eof, err);
+}
+
 // Section: Single char tokens -------------------------------------------------
 
 test "lexer next single char" {

@@ -19,6 +19,7 @@ enum LecError lec_lexer_init(struct LecLexer *lexer, struct GciInterfaceReader r
     lexer->state = LEC_STATE_START;
     lexer->sub_state.char_state = 0; // invalid value
     lexer->prev_arena_start = 0;
+    lexer->prev_byte_position = 0;
     lexer->byte_position = 0;
     lexer->reader = reader;
     lexer->arena = arena;
@@ -38,10 +39,8 @@ enum LecError lec_lexer_next(struct LecLexer *lexer, struct LecToken *token) {
 
     if (lexer->state != LEC_STATE_START) {
         token->arena_start = lexer->prev_arena_start;
-        token->byte_start = lexer->byte_position - (lexer->arena.position - lexer->prev_arena_start);
+        token->byte_start = lexer->prev_byte_position;
     } else {
-        lexer->prev_arena_start = lexer->arena.position;
-
         char c = lexer->buffer_char == EOF ? ' ' : (char) lexer->buffer_char;
         while (isspace((unsigned char) c)) {
             size_t length = gci_reader_read(lexer->reader, &c, 1);
@@ -55,6 +54,8 @@ enum LecError lec_lexer_next(struct LecLexer *lexer, struct LecToken *token) {
             lexer->byte_position += 1;
         }
 
+        lexer->prev_arena_start = lexer->arena.position;
+        lexer->prev_byte_position = lexer->byte_position - 1;
         token->byte_start = lexer->byte_position - 1;
     }
 
@@ -230,12 +231,14 @@ enum LecError lec_internal_lexer_start(struct LecLexer *lexer, struct LecToken *
                 lexer->state = LEC_STATE_STRING;
                 lexer->sub_state.char_state = LEC_STATE_CHARS;
                 token->byte_start = lexer->byte_position;
+                lexer->prev_byte_position += 1;
                 break;
             case '\'':
                 skip_char = true;
                 lexer->state = LEC_STATE_CHAR;
                 lexer->sub_state.char_state = LEC_STATE_CHARS;
                 token->byte_start = lexer->byte_position;
+                lexer->prev_byte_position += 1;
                 break;
             default:
                 assert(false); // TODO: now what?
@@ -308,6 +311,7 @@ enum LecError lec_internal_lexer_multi_char(struct LecLexer *lexer, struct LecTo
                 assert(lexer->arena.position > 0);
                 lexer->arena.position -= 1;
                 token->byte_start += 2;
+                lexer->prev_byte_position += 2;
                 lexer->state = LEC_STATE_COMMENT;
                 return LEC_ERROR_OK;
             } else {

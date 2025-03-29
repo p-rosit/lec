@@ -57,6 +57,7 @@ struct LecLexer {
     struct GciInterfaceReader reader;
     struct LecArena arena;
     size_t prev_arena_start;
+    size_t prev_byte_position;
     size_t byte_position;
     enum LecState state;
     union {

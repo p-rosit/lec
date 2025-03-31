@@ -390,16 +390,22 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
     assert(LEC_STATE_NUMBER_FIRST < lexer->sub_state.char_state);
     assert(lexer->sub_state.char_state < LEC_STATE_NUMBER_LAST);
 
-    switch (c) {
+    switch (lexer->sub_state.number_state) {
         case (LEC_STATE_NUMBER_ZERO):
             if (c == '.') {
                 lexer->sub_state.number_state = LEC_STATE_NUMBER_POINT;
             } else if (c == 'e' || c == 'E') {
                 lexer->sub_state.number_state = LEC_STATE_NUMBER_E;
             } else if (c == 'b') {
+                assert(lexer->arena.position > 0);
+                lexer->arena.position -= 1;
                 lexer->sub_state.number_state = LEC_STATE_NUMBER_BIN;
+                return LEC_ERROR_OK;
             } else if (c == 'x') {
+                assert(lexer->arena.position > 0);
+                lexer->arena.position -= 1;
                 lexer->sub_state.number_state = LEC_STATE_NUMBER_HEX;
+                return LEC_ERROR_OK;
             } else {
                 lexer->buffer_char = c;
                 return LEC_ERROR_NUMBER;
@@ -412,6 +418,10 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
                 lexer->sub_state.number_state = LEC_STATE_NUMBER_POINT;
             } else if (c == 'e' || c == 'E') {
                 lexer->sub_state.number_state = LEC_STATE_NUMBER_E;
+            } else if (isspace((unsigned char) c)) {
+                token->type = LEC_TOKEN_TYPE_NUMBER_INT;
+                lexer->state = LEC_STATE_END;
+                lexer->buffer_char = c;
             } else {
                 lexer->buffer_char = c;
                 return LEC_ERROR_NUMBER;
@@ -458,13 +468,21 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
             }
             break;
         case (LEC_STATE_NUMBER_BIN):
-            if (c != '0' && c != '1') {
+            if (isspace((unsigned char) c)) {
+                token->type = LEC_TOKEN_TYPE_NUMBER_BIN;
+                lexer->state = LEC_STATE_END;
+                lexer->buffer_char = c;
+            } else if (c != '0' && c != '1') {
                 lexer->buffer_char = c;
                 return LEC_ERROR_NUMBER;
             }
             break;
         case (LEC_STATE_NUMBER_HEX):
-            if (!isxdigit((unsigned char) c)) {
+            if (isspace((unsigned char) c)) {
+                token->type = LEC_TOKEN_TYPE_NUMBER_HEX;
+                lexer->state = LEC_STATE_END;
+                lexer->buffer_char = c;
+            } else if (!isxdigit((unsigned char) c)) {
                 lexer->buffer_char = c;
                 return LEC_ERROR_NUMBER;
             }
@@ -546,8 +564,6 @@ enum LecError lec_internal_lexer_eof(struct LecLexer *lexer, struct LecToken *to
                     assert(false);
                 case (LEC_STATE_NUMBER_ZERO):
                 case (LEC_STATE_NUMBER_WHOLE):
-                case (LEC_STATE_NUMBER_BIN):
-                case (LEC_STATE_NUMBER_HEX):
                     token->type = LEC_TOKEN_TYPE_NUMBER_INT;
                     break;
                 case (LEC_STATE_NUMBER_POINT):
@@ -561,6 +577,12 @@ enum LecError lec_internal_lexer_eof(struct LecLexer *lexer, struct LecToken *to
                     return LEC_ERROR_NUMBER;
                 case (LEC_STATE_NUMBER_EXPONENT):
                     token->type = LEC_TOKEN_TYPE_NUMBER_FLOAT;
+                    break;
+                case (LEC_STATE_NUMBER_BIN):
+                    token->type = LEC_TOKEN_TYPE_NUMBER_BIN;
+                    break;
+                case (LEC_STATE_NUMBER_HEX):
+                    token->type = LEC_TOKEN_TYPE_NUMBER_HEX;
                     break;
                 case (LEC_STATE_NUMBER_LAST):
                     assert(false);

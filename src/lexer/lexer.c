@@ -392,7 +392,11 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
 
     switch (lexer->sub_state.number_state) {
         case (LEC_STATE_NUMBER_ZERO):
-            if (c == '.') {
+            if (isspace((unsigned char) c)) {
+                token->type = LEC_TOKEN_TYPE_NUMBER_INT;
+                lexer->state = LEC_STATE_END;
+                lexer->buffer_char = c;
+            } else if (c == '.') {
                 lexer->sub_state.number_state = LEC_STATE_NUMBER_POINT;
             } else if (c == 'e' || c == 'E') {
                 lexer->sub_state.number_state = LEC_STATE_NUMBER_E;
@@ -435,7 +439,11 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
             lexer->sub_state.number_state = LEC_STATE_NUMBER_FRACTION;
             break;
         case (LEC_STATE_NUMBER_FRACTION):
-            if (isdigit((unsigned char) c)) {
+            if (isspace((unsigned char) c)) {
+                token->type = LEC_TOKEN_TYPE_NUMBER_FLOAT;
+                lexer->state = LEC_STATE_END;
+                lexer->buffer_char = c;
+            } else if (isdigit((unsigned char) c)) {
                 lexer->sub_state.number_state = LEC_STATE_NUMBER_FRACTION;
             } else if (c == 'e' || c == 'E') {
                 lexer->sub_state.number_state = LEC_STATE_NUMBER_E;
@@ -447,7 +455,7 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
         case (LEC_STATE_NUMBER_E):
             if (isdigit((unsigned char) c)) {
                 lexer->sub_state.number_state = LEC_STATE_NUMBER_EXPONENT;
-            } if (c == '+' || c == '-') {
+            } else if (c == '+' || c == '-') {
                 lexer->sub_state.number_state = LEC_STATE_NUMBER_EXPONENT_SIGN;
             } else {
                 lexer->buffer_char = c;
@@ -462,7 +470,11 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
             lexer->sub_state.number_state = LEC_STATE_NUMBER_EXPONENT;
             break;
         case (LEC_STATE_NUMBER_EXPONENT):
-            if (!isdigit((unsigned char) c)) {
+            if (isspace((unsigned char) c)) {
+                token->type = LEC_TOKEN_TYPE_NUMBER_FLOAT;
+                lexer->state = LEC_STATE_END;
+                lexer->buffer_char = c;
+            } else if (!isdigit((unsigned char) c)) {
                 lexer->buffer_char = c;
                 return LEC_ERROR_NUMBER;
             }

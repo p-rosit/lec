@@ -14,7 +14,7 @@ test "lexer init" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 }
 
 // Section: Empty --------------------------------------------------------------
@@ -32,7 +32,7 @@ test "lexer empty" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
@@ -52,7 +52,7 @@ test "lexer whitespace" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
@@ -74,11 +74,11 @@ test "lexer next single char" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token1: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token1);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next1_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next1_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_MINUS), token1.type);
     try testing.expectEqual(0, token1.arena_start);
     try testing.expectEqual(1, token1.byte_start);
@@ -87,7 +87,7 @@ test "lexer next single char" {
 
     var token2: lib.LecToken = undefined;
     const next2_err = lib.lec_lexer_next(&lexer, &token2);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next2_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next2_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_DOT), token2.type);
     try testing.expectEqual(1, token2.arena_start);
     try testing.expectEqual(2, token2.byte_start);
@@ -108,11 +108,11 @@ test "lexer next plus" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_PLUS), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -132,11 +132,11 @@ test "lexer next plus eof" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_PLUS), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -159,7 +159,7 @@ test "lexer next plus fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -168,7 +168,7 @@ test "lexer next plus fail" {
     reader.amount_of_reads = 0;
 
     const next2_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next2_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next2_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_PLUS), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -188,11 +188,11 @@ test "lexer next minus" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_MINUS), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -212,11 +212,11 @@ test "lexer next minus eof" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_MINUS), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -239,7 +239,7 @@ test "lexer next minus fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -248,7 +248,7 @@ test "lexer next minus fail" {
     reader.amount_of_reads = 0;
 
     const next2_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next2_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next2_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_MINUS), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -268,11 +268,11 @@ test "lexer next mul" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_MUL), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -292,11 +292,11 @@ test "lexer next div" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_DIV), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -316,11 +316,11 @@ test "lexer next div eof" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_DIV), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -343,7 +343,7 @@ test "lexer next div fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -372,11 +372,11 @@ test "lexer next assign" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_ASSIGN), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -396,11 +396,11 @@ test "lexer next assign eof" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_ASSIGN), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -423,7 +423,7 @@ test "lexer next assign fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -452,11 +452,11 @@ test "lexer next l paren" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_L_PAREN), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -476,11 +476,11 @@ test "lexer next r paren" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_R_PAREN), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -500,11 +500,11 @@ test "lexer next l brack" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_L_BRACK), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -524,11 +524,11 @@ test "lexer next r brack" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_R_BRACK), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -548,11 +548,11 @@ test "lexer next l brace" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_L_BRACE), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -572,11 +572,11 @@ test "lexer next r brace" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_R_BRACE), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -596,11 +596,11 @@ test "lexer next l angle" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_L_ANGLE), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -620,11 +620,11 @@ test "lexer next l angle eof" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_L_ANGLE), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -647,7 +647,7 @@ test "lexer next l angle fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -676,11 +676,11 @@ test "lexer next r angle" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_R_ANGLE), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -700,11 +700,11 @@ test "lexer next r angle eof" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_R_ANGLE), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -727,7 +727,7 @@ test "lexer next r angle fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -756,11 +756,11 @@ test "lexer next dot" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_DOT), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -780,11 +780,11 @@ test "lexer next comma" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_COMMA), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -804,11 +804,11 @@ test "lexer next question" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_QUESTION), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -828,11 +828,11 @@ test "lexer next colon" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_COLON), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -852,11 +852,11 @@ test "lexer next semicolon" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_SEMICOLON), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -876,11 +876,11 @@ test "lexer next not" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_NOT), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -900,11 +900,11 @@ test "lexer next preprocess" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_PREPROC), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -926,11 +926,11 @@ test "lexer next equal" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_EQUAL), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -953,7 +953,7 @@ test "lexer next equal fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -982,11 +982,11 @@ test "lexer next not equal" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_NEQ), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -1009,7 +1009,7 @@ test "lexer next not equal fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -1038,11 +1038,11 @@ test "lexer next leq" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_LEQ), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -1065,7 +1065,7 @@ test "lexer next leq fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -1094,11 +1094,11 @@ test "lexer next geq" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_GEQ), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -1121,7 +1121,7 @@ test "lexer next geq fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -1150,11 +1150,11 @@ test "lexer next increment" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_INC), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -1177,7 +1177,7 @@ test "lext next increment fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -1206,11 +1206,11 @@ test "lexer next decrement" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_DEC), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(0, token.byte_start);
@@ -1233,7 +1233,7 @@ test "lexer next decrement fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -1264,11 +1264,11 @@ test "lexer next comment" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_COMMENT), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(3, token.byte_start);
@@ -1289,11 +1289,11 @@ test "lexer next comment eof" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_COMMENT), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(2, token.byte_start);
@@ -1317,7 +1317,7 @@ test "lexer next comment start fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -1327,7 +1327,7 @@ test "lexer next comment start fail" {
     reader.amount_of_reads = 0;
 
     const next2_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next2_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next2_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_COMMENT), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(2, token.byte_start);
@@ -1351,7 +1351,7 @@ test "lexer next comment fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -1360,7 +1360,7 @@ test "lexer next comment fail" {
     reader.amount_of_reads = 0;
 
     const next2_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next2_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next2_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_COMMENT), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(2, token.byte_start);
@@ -1383,11 +1383,11 @@ test "lexer next char" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_CHAR), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(1, token.byte_start);
@@ -1408,7 +1408,7 @@ test "lexer next char eof" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
@@ -1431,7 +1431,7 @@ test "lexer next char fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -1441,7 +1441,7 @@ test "lexer next char fail" {
     reader.amount_of_reads = 0;
 
     const next2_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next2_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next2_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_CHAR), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(1, token.byte_start);
@@ -1465,7 +1465,7 @@ test "lexer next char escape fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -1474,7 +1474,7 @@ test "lexer next char escape fail" {
     reader.amount_of_reads = 0;
 
     const next2_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next2_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next2_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_CHAR), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(1, token.byte_start);
@@ -1495,11 +1495,11 @@ test "lexer next string" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_STRING), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(1, token.byte_start);
@@ -1520,7 +1520,7 @@ test "lexer next string eof" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next_err = lib.lec_lexer_next(&lexer, &token);
@@ -1543,7 +1543,7 @@ test "lexer next string fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -1553,7 +1553,7 @@ test "lexer next string fail" {
     reader.amount_of_reads = 0;
 
     const next2_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next2_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next2_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_STRING), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(1, token.byte_start);
@@ -1577,7 +1577,7 @@ test "lexer next string escape fail" {
 
     var lexer: lib.LecLexer = undefined;
     const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_fail_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), init_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
 
     var token: lib.LecToken = undefined;
     const next1_err = lib.lec_lexer_next(&lexer, &token);
@@ -1586,7 +1586,7 @@ test "lexer next string escape fail" {
     reader.amount_of_reads = 0;
 
     const next2_err = lib.lec_lexer_next(&lexer, &token);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), next2_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next2_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_STRING), token.type);
     try testing.expectEqual(0, token.arena_start);
     try testing.expectEqual(1, token.byte_start);

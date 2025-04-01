@@ -50,6 +50,20 @@ pub fn build(b: *std.Build) void {
     lib_unit_tests.root_module.addImport("gci", gci.module("gci"));
     const run_lib_unit_tests = b.addRunArtifact(lib_unit_tests);
 
+    const json_tests = b.addTest(.{
+        .root_source_file = b.path("src/lec.zig"),
+        .test_runner = b.path("src/lexer/test/test.zig"),
+        .link_libc = true,
+    });
+    json_tests.linkLibrary(lib);
+    json_tests.addIncludePath(b.path("src"));
+    json_tests.addIncludePath(gci.path("src"));
+    json_tests.addIncludePath(gci.path("src/interface"));
+    json_tests.addIncludePath(gci.path("src/implementation"));
+    json_tests.root_module.addImport("gci", gci.module("gci"));
+    const run_json_tests = b.addRunArtifact(json_tests);
+
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_lib_unit_tests.step);
+    test_step.dependOn(&run_json_tests.step);
 }

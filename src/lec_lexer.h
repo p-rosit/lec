@@ -6,15 +6,16 @@
 #include <lec_token.h>
 
 enum LecState {
-    LEC_STATE_START,
+    LEC_STATE_START         = 1,
 
-    LEC_STATE_MULTI_CHAR,
-    LEC_STATE_CHAR,
-    LEC_STATE_STRING,
-    LEC_STATE_NUMBER,
-    LEC_STATE_COMMENT,
+    LEC_STATE_TEXT          = 2,
+    LEC_STATE_MULTI_CHAR    = 3,
+    LEC_STATE_CHAR          = 4,
+    LEC_STATE_STRING        = 5,
+    LEC_STATE_NUMBER        = 6,
+    LEC_STATE_COMMENT       = 7,
 
-    LEC_STATE_END,
+    LEC_STATE_END           = 8,
     LEC_STATE_MAX,
 };
 

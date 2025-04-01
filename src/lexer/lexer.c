@@ -7,6 +7,7 @@
 
 enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecToken *token);
 enum LecError lec_internal_lexer_start(struct LecLexer *lexer, struct LecToken *token, char c);
+enum LecError lec_internal_lexer_text(struct LecLexer *lexer, struct LecToken *token, char c);
 enum LecError lec_internal_lexer_multi_char(struct LecLexer *lexer, struct LecToken *token, char c);
 enum LecError lec_internal_lexer_chars(struct LecLexer *lexer, struct LecToken *token, char c);
 enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken *token, char c);
@@ -87,9 +88,15 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
         lexer->buffer_char = EOF;
     }
 
+    assert(0 <= lexer->state && lexer->state < LEC_STATE_MAX);
     switch (lexer->state) {
         case (LEC_STATE_START): {
             enum LecError err = lec_internal_lexer_start(lexer, token, c);
+            if (err) { return err; }
+            break;
+        }
+        case (LEC_STATE_TEXT): {
+            enum LecError err = lec_internal_lexer_text(lexer, token, c);
             if (err) { return err; }
             break;
         }
@@ -136,7 +143,7 @@ enum LecError lec_internal_lexer_start(struct LecLexer *lexer, struct LecToken *
     bool skip_char = false;
 
     if (isalpha((unsigned char) c) || c == '_') {
-        assert(false);
+        lexer->state = LEC_STATE_TEXT;
     } else if (isdigit((unsigned char) c)) {
         lexer->state = LEC_STATE_NUMBER;
         if (c == '0') {
@@ -248,6 +255,18 @@ enum LecError lec_internal_lexer_start(struct LecLexer *lexer, struct LecToken *
     if (!skip_char) {
         enum LecError err = lec_arena_add(&lexer->arena, c);
         if (err) { return err; }
+    }
+    return LEC_ERROR_OK;
+}
+
+enum LecError lec_internal_lexer_text(struct LecLexer *lexer, struct LecToken *token, char c) {
+    if (isalpha((unsigned char) c) || isdigit((unsigned char) c) || c == '_') {
+        enum LecError err = lec_arena_add(&lexer->arena, c);
+        if (err) { return err; }
+    } else {
+        token->type = LEC_TOKEN_TYPE_TEXT;
+        lexer->state = LEC_STATE_END;
+        lexer->buffer_char = c;
     }
     return LEC_ERROR_OK;
 }
@@ -528,9 +547,15 @@ enum LecError lec_internal_lexer_comment(struct LecLexer *lexer, struct LecToken
 }
 
 enum LecError lec_internal_lexer_eof(struct LecLexer *lexer, struct LecToken *token) {
+    assert(0 <= lexer->state && lexer->state < LEC_STATE_MAX);
     switch (lexer->state) {
         case (LEC_STATE_START): {
             return LEC_ERROR_EOF;
+        }
+        case (LEC_STATE_TEXT): {
+            token->type = LEC_TOKEN_TYPE_TEXT;
+            lexer->state = LEC_STATE_END;
+            return LEC_ERROR_OK;
         }
         case (LEC_STATE_MULTI_CHAR): {
             assert(LEC_STATE_MULTI_CHAR_FIRST < lexer->sub_state.char_state);

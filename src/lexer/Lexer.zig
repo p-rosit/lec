@@ -1555,3 +1555,76 @@ test "lexer next float exponent fail" {
     try testing.expectEqual(6, token.inner.length);
     try testing.expectEqualStrings("1.2e34", &buffer);
 }
+
+// Section: Text ---------------------------------------------------------------
+
+test "lexer next text" {
+    var buffer: [3]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "\t\nint ";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.text, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(2, token.inner.byte_start);
+    try testing.expectEqual(3, token.inner.length);
+}
+
+test "lexer next text eof" {
+    var buffer: [3]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "int";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.text, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(3, token.inner.length);
+    try testing.expectEqualStrings("int", &buffer);
+}
+
+test "lexer next text fail" {
+    var buffer: [3]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "int";
+    var r = try gci.ReaderString.init(data);
+    var reader = try gci.ReaderFail.init(r.interface(), 2);
+
+    var lexer = try Self.init(reader.interface(), arena);
+
+    const err = lexer.next();
+    try testing.expectError(error.Reader, err);
+
+    reader.inner.amount_of_reads = 0;
+
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.text, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(3, token.inner.length);
+    try testing.expectEqualStrings("int", &buffer);
+}
+
+test "lexer next text characters" {
+    var buffer: [4]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "i_23/";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.text, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(4, token.inner.length);
+    try testing.expectEqualStrings("i_23", &buffer);
+}

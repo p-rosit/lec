@@ -60,8 +60,7 @@ pub fn build(b: *std.Build) void {
     const run_lib_unit_tests = b.addRunArtifact(lib_unit_tests);
 
     const json_tests = b.addTest(.{
-        .root_source_file = b.path("src/lec.zig"),
-        .test_runner = b.path("src/lexer/test/test.zig"),
+        .root_source_file = b.path("src/test_json.zig"),
         .link_libc = true,
     });
     json_tests.linkLibrary(lib);

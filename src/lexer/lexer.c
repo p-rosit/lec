@@ -13,6 +13,7 @@ enum LecError lec_internal_lexer_chars(struct LecLexer *lexer, struct LecToken *
 enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken *token, char c);
 enum LecError lec_internal_lexer_comment(struct LecLexer *lexer, struct LecToken *token, char c);
 enum LecError lec_internal_lexer_eof(struct LecLexer *lexer, struct LecToken *token);
+bool lec_internal_lexer_number_valid_end(struct LecLexer *lexer, char c);
 
 enum LecError lec_lexer_init(struct LecLexer *lexer, struct GciInterfaceReader reader, struct LecArena arena) {
     if (lexer == NULL) { return LEC_ERROR_NULL; }
@@ -411,7 +412,7 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
 
     switch (lexer->sub_state.number_state) {
         case (LEC_STATE_NUMBER_ZERO):
-            if (isspace((unsigned char) c)) {
+            if (lec_internal_lexer_number_valid_end(lexer, c)) {
                 token->type = LEC_TOKEN_TYPE_NUMBER_INT;
                 lexer->state = LEC_STATE_END;
                 lexer->buffer_char = c;
@@ -441,7 +442,7 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
                 lexer->sub_state.number_state = LEC_STATE_NUMBER_POINT;
             } else if (c == 'e' || c == 'E') {
                 lexer->sub_state.number_state = LEC_STATE_NUMBER_E;
-            } else if (isspace((unsigned char) c)) {
+            } else if (lec_internal_lexer_number_valid_end(lexer, c)) {
                 token->type = LEC_TOKEN_TYPE_NUMBER_INT;
                 lexer->state = LEC_STATE_END;
                 lexer->buffer_char = c;
@@ -458,7 +459,7 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
             lexer->sub_state.number_state = LEC_STATE_NUMBER_FRACTION;
             break;
         case (LEC_STATE_NUMBER_FRACTION):
-            if (isspace((unsigned char) c)) {
+            if (lec_internal_lexer_number_valid_end(lexer, c)) {
                 token->type = LEC_TOKEN_TYPE_NUMBER_FLOAT;
                 lexer->state = LEC_STATE_END;
                 lexer->buffer_char = c;
@@ -489,7 +490,7 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
             lexer->sub_state.number_state = LEC_STATE_NUMBER_EXPONENT;
             break;
         case (LEC_STATE_NUMBER_EXPONENT):
-            if (isspace((unsigned char) c)) {
+            if (lec_internal_lexer_number_valid_end(lexer, c)) {
                 token->type = LEC_TOKEN_TYPE_NUMBER_FLOAT;
                 lexer->state = LEC_STATE_END;
                 lexer->buffer_char = c;
@@ -499,7 +500,7 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
             }
             break;
         case (LEC_STATE_NUMBER_BIN):
-            if (isspace((unsigned char) c)) {
+            if (lec_internal_lexer_number_valid_end(lexer, c)) {
                 token->type = LEC_TOKEN_TYPE_NUMBER_BIN;
                 lexer->state = LEC_STATE_END;
                 lexer->buffer_char = c;
@@ -509,7 +510,7 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
             }
             break;
         case (LEC_STATE_NUMBER_HEX):
-            if (isspace((unsigned char) c)) {
+            if (lec_internal_lexer_number_valid_end(lexer, c)) {
                 token->type = LEC_TOKEN_TYPE_NUMBER_HEX;
                 lexer->state = LEC_STATE_END;
                 lexer->buffer_char = c;
@@ -638,4 +639,40 @@ enum LecError lec_internal_lexer_eof(struct LecLexer *lexer, struct LecToken *to
     }
 
     return LEC_ERROR_OK;
+}
+
+bool lec_internal_lexer_number_valid_end(struct LecLexer *lexer, char c) {
+    (void)lexer;
+
+    if (isspace((unsigned char) c)) {
+        return true;
+    }
+
+    switch (c) {
+        case '+':
+        case '-':
+        case '!':
+        case '*':
+        case '/':
+        case '=':
+        case '(':
+        case ')':
+        case '[':
+        case ']':
+        case '{':
+        case '}':
+        case '<':
+        case '>':
+        // case ',':  // not a valid end
+        case ',':
+        case '?':
+        case ':':
+        case ';':
+        case '#':
+        case '"':
+        case '\'':
+            return true;
+    }
+
+    return false;
 }

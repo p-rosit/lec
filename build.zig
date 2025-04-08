@@ -8,6 +8,10 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
+    const con = b.dependency("con", .{
+        .target = target,
+        .optimize = optimize,
+    });
 
     const mod = b.addModule("lec", .{
         .root_source_file = b.path("src/lec.zig"),
@@ -16,7 +20,9 @@ pub fn build(b: *std.Build) void {
         .imports = &.{.{ .name = "gci", .module = gci.module("gci") }},
     });
     mod.addIncludePath(b.path("src"));
+    mod.addIncludePath(gci.path("src"));
     mod.addIncludePath(gci.path("src/interface"));
+    mod.addIncludePath(gci.path("src/implementation"));
 
     const lib = b.addStaticLibrary(.{
         .name = "lec",
@@ -27,8 +33,11 @@ pub fn build(b: *std.Build) void {
     });
     mod.linkLibrary(lib);
     lib.linkLibrary(gci.artifact("gci"));
+    lib.linkLibrary(con.artifact("con-deserialize"));
     lib.addIncludePath(b.path("src"));
+    lib.addIncludePath(gci.path("src"));
     lib.addIncludePath(gci.path("src/interface"));
+    lib.addIncludePath(gci.path("src/implementation"));
     b.installArtifact(lib);
 
     lib.addCSourceFiles(.{
@@ -61,7 +70,9 @@ pub fn build(b: *std.Build) void {
     json_tests.addIncludePath(gci.path("src/interface"));
     json_tests.addIncludePath(gci.path("src/implementation"));
     json_tests.root_module.addImport("gci", gci.module("gci"));
+    json_tests.root_module.addImport("con", con.module("con"));
     const run_json_tests = b.addRunArtifact(json_tests);
+    run_json_tests.has_side_effects = true;
 
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_lib_unit_tests.step);

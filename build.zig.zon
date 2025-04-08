@@ -25,7 +25,11 @@
     .dependencies = .{
         .gci = .{
             .url = "/home/pontus/clang/gci",
-            .hash = "1220d6daddafe1458ee82afc294270c4ac0574a4bbf6717985fd5764d59f493bbd35",
+            .hash = "12205b88611f0c8459fd860521040a8c036fe00b80200c6d61b65f7601fcd5352983",
+        },
+        .con = .{
+            .url = "/home/pontus/clang/con",
+            .hash = "1220cc4c0e3702487ce7d4ff524dd3c63a05f3bf2a77226c9ee5010afa4f8065d263",
         },
     },
     .paths = .{

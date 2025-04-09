@@ -1,0 +1,233 @@
+[
+    {
+        "name": "space",
+        "data": "1 ",
+        "result": [
+            {"type": "number_int", "data": "1", "byte_start": 0}
+        ]
+    },
+    {
+        "name": "char",
+        "data": "2'a'",
+        "result": [
+            {"type": "number_int", "data": "2", "byte_start": 0},
+            {"type": "char", "data": "a", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "string",
+        "data": "2\"a\"",
+        "result": [
+            {"type": "number_int", "data": "2", "byte_start": 0},
+            {"type": "string", "data": "a", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "comment",
+        "data": "2//comment",
+        "result": [
+            {"type": "number_int", "data": "2", "byte_start": 0},
+            {"type": "comment", "data": "comment", "byte_start": 3}
+        ]
+    },
+    {
+        "name": "plus",
+        "data": "2+",
+        "result": [
+            {"type": "number_int", "data": "2", "byte_start": 0},
+            {"type": "plus", "data": "+", "byte_start": 1}
+        ]
+    },
+    {
+        "name": "minus",
+        "data": "3-",
+        "result": [
+            {"type": "number_int", "data": "3", "byte_start": 0},
+            {"type": "minus", "data": "-", "byte_start": 1}
+        ]
+    },
+    {
+        "name": "mul",
+        "data": "4*",
+        "result": [
+            {"type": "number_int", "data": "4", "byte_start": 0},
+            {"type": "mul", "data": "*", "byte_start": 1}
+        ]
+    },
+    {
+        "name": "div",
+        "data": "5/",
+        "result": [
+            {"type": "number_int", "data": "5", "byte_start": 0},
+            {"type": "div", "data": "/", "byte_start": 1}
+        ]
+    },
+    {
+        "name": "assign",
+        "data": "6=",
+        "result": [
+            {"type": "number_int", "data": "6", "byte_start": 0},
+            {"type": "assign", "data": "=", "byte_start": 1}
+        ]
+    },
+    {
+        "name": "equal",
+        "data": "7==",
+        "result": [
+            {"type": "number_int", "data": "7", "byte_start": 0},
+            {"type": "equal", "data": "==", "byte_start": 1}
+        ]
+    },
+    {
+        "name": "neq",
+        "data": "8!=",
+        "result": [
+            {"type": "number_int", "data": "8", "byte_start": 0},
+            {"type": "neq", "data": "!=", "byte_start": 1}
+        ]
+    },
+    {
+        "name": "leq",
+        "data": "9<=",
+        "result": [
+            {"type": "number_int", "data": "9", "byte_start": 0},
+            {"type": "leq", "data": "<=", "byte_start": 1}
+        ]
+    },
+    {
+        "name": "geq",
+        "data": "0>=",
+        "result": [
+            {"type": "number_int", "data": "0", "byte_start": 0},
+            {"type": "geq", "data": ">=", "byte_start": 1}
+        ]
+    },
+    {
+        "name": "inc",
+        "data": "10++",
+        "result": [
+            {"type": "number_int", "data": "10", "byte_start": 0},
+            {"type": "inc", "data": "++", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "dec",
+        "data": "11--",
+        "result": [
+            {"type": "number_int", "data": "11", "byte_start": 0},
+            {"type": "dec", "data": "--", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "not",
+        "data": "21!",
+        "result": [
+            {"type": "number_int", "data": "21", "byte_start": 0},
+            {"type": "not", "data": "!", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "l_paren",
+        "data": "22(",
+        "result": [
+            {"type": "number_int", "data": "22", "byte_start": 0},
+            {"type": "l_paren", "data": "(", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "r_paren",
+        "data": "32)",
+        "result": [
+            {"type": "number_int", "data": "32", "byte_start": 0},
+            {"type": "r_paren", "data": ")", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "l_brack",
+        "data": "33[",
+        "result": [
+            {"type": "number_int", "data": "33", "byte_start": 0},
+            {"type": "l_brack", "data": "[", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "r_brack",
+        "data": "34]",
+        "result": [
+            {"type": "number_int", "data": "34", "byte_start": 0},
+            {"type": "r_brack", "data": "]", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "l_brace",
+        "data": "35{",
+        "result": [
+            {"type": "number_int", "data": "35", "byte_start": 0},
+            {"type": "l_brace", "data": "{", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "r_brace",
+        "data": "36}",
+        "result": [
+            {"type": "number_int", "data": "36", "byte_start": 0},
+            {"type": "r_brace", "data": "}", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "l_angle",
+        "data": "37<",
+        "result": [
+            {"type": "number_int", "data": "37", "byte_start": 0},
+            {"type": "l_angle", "data": "<", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "r_angle",
+        "data": "38>",
+        "result": [
+            {"type": "number_int", "data": "38", "byte_start": 0},
+            {"type": "r_angle", "data": ">", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "comma",
+        "data": "39,",
+        "result": [
+            {"type": "number_int", "data": "39", "byte_start": 0},
+            {"type": "comma", "data": ",", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "question",
+        "data": "40?",
+        "result": [
+            {"type": "number_int", "data": "40", "byte_start": 0},
+            {"type": "question", "data": "?", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "colon",
+        "data": "41:",
+        "result": [
+            {"type": "number_int", "data": "41", "byte_start": 0},
+            {"type": "colon", "data": ":", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "semicolon",
+        "data": "42;",
+        "result": [
+            {"type": "number_int", "data": "42", "byte_start": 0},
+            {"type": "semicolon", "data": ";", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "preproc",
+        "data": "43#",
+        "result": [
+            {"type": "number_int", "data": "43", "byte_start": 0},
+            {"type": "preproc", "data": "#", "byte_start": 2}
+        ]
+    }
+]

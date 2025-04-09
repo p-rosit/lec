@@ -36,9 +36,10 @@ test {
 
         const file = try std.fs.cwd().openFile(path, .{});
         var file_reader = ZigFileReader.init(&file.reader());
+        var comment_reader = try con.ReaderComment.init(file_reader.interface());
 
         var depth: [4]con.Container = undefined;
-        var parse_context = try con.Deserialize.init(file_reader.interface(), &depth);
+        var parse_context = try con.Deserialize.init(comment_reader.interface(), &depth);
 
         const tests = try parseTests(arena.allocator(), &parse_context);
         defer _ = arena.reset(.retain_capacity);

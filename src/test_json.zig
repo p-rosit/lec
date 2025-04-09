@@ -92,7 +92,7 @@ fn runTest(allocator: std.mem.Allocator, path: []const u8, t: LexerTest) !void {
     }
 
     for (0.., t.tokens, tokens.items) |i, token, result| {
-        const data = buffer[token.arena_start .. token.arena_start + token.data.len];
+        const data = buffer[result.inner.arena_start .. result.inner.arena_start + result.inner.length];
         const wrong_type = token.type != result.type();
         const wrong_arena = token.arena_start != result.inner.arena_start;
         const wrong_byte = token.byte_start != result.inner.byte_start;

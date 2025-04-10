@@ -54,6 +54,7 @@ enum LecError lec_lexer_next(struct LecLexer *lexer, struct LecToken *token) {
     }
 
     lexer->state = LEC_STATE_START;
+    assert(lexer->arena.position >= token->arena_start);
     token->length = lexer->arena.position - token->arena_start;
     return LEC_ERROR_OK;
 }

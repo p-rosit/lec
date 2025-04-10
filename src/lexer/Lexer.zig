@@ -57,20 +57,23 @@ test "lexer empty" {
     try testing.expectError(error.Eof, err);
 }
 
+// Section: Single char tokens -------------------------------------------------
+
 test "lexer whitespace" {
-    var buffer: [2]u8 = undefined;
+    var buffer: [1]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
 
-    const data = "\n\t   \n";
+    const data = "\n";
     var reader = try gci.ReaderString.init(data);
 
     var lexer = try Self.init(reader.interface(), arena);
 
-    const err = lexer.next();
-    try testing.expectError(error.Eof, err);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.newline, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(1, token.inner.length);
 }
-
-// Section: Single char tokens -------------------------------------------------
 
 test "lexer next plus" {
     var buffer: [1]u8 = undefined;
@@ -580,6 +583,110 @@ test "lexer next preprocess" {
 }
 
 // Section: Multi char tokens --------------------------------------------------
+
+test "lexer next whitespace" {
+    var buffer: [3]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = " \t \n";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.whitespace, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(3, token.inner.length);
+}
+
+test "lexer next whitespace eof" {
+    var buffer: [3]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = " \t ";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.whitespace, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(3, token.inner.length);
+}
+
+test "lexer next whitespace fail" {
+    var buffer: [3]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = " \t ";
+    var r = try gci.ReaderString.init(data);
+    var reader = try gci.ReaderFail.init(r.interface(), 2);
+
+    var lexer = try Self.init(reader.interface(), arena);
+
+    const err = lexer.next();
+    try testing.expectError(error.Reader, err);
+
+    reader.inner.amount_of_reads = 0;
+
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.whitespace, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(3, token.inner.length);
+}
+
+test "lexer next escaped newline" {
+    var buffer: [1]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "\\\n ";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.escaped_newline, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(1, token.inner.byte_start);
+    try testing.expectEqual(1, token.inner.length);
+}
+
+test "lexer next escaped newline eof" {
+    var buffer: [1]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "\\\n";
+    var reader = try gci.ReaderString.init(data);
+
+    var lexer = try Self.init(reader.interface(), arena);
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.escaped_newline, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(1, token.inner.byte_start);
+    try testing.expectEqual(1, token.inner.length);
+}
+
+test "lexer next escaped newline fail" {
+    var buffer: [1]u8 = undefined;
+    const arena = try zlec.Arena.init(&buffer);
+
+    const data = "\\\n";
+    var r = try gci.ReaderString.init(data);
+    var reader = try gci.ReaderFail.init(r.interface(), 1);
+
+    var lexer = try Self.init(reader.interface(), arena);
+
+    const err = lexer.next();
+    try testing.expectError(error.Reader, err);
+
+    reader.inner.amount_of_reads = 0;
+
+    const token = try lexer.next();
+    try testing.expectEqual(TokenType.escaped_newline, token.type());
+    try testing.expectEqual(0, token.inner.arena_start);
+    try testing.expectEqual(1, token.inner.byte_start);
+    try testing.expectEqual(1, token.inner.length);
+}
 
 test "lexer next equal" {
     var buffer: [2]u8 = undefined;

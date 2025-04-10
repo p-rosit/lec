@@ -43,22 +43,9 @@ enum LecError lec_lexer_next(struct LecLexer *lexer, struct LecToken *token) {
         token->arena_start = lexer->prev_arena_start;
         token->byte_start = lexer->prev_byte_position;
     } else {
-        char c = lexer->buffer_char == EOF ? ' ' : (char) lexer->buffer_char;
-        while (isspace((unsigned char) c)) {
-            size_t length = gci_reader_read(lexer->reader, &c, 1);
-            if (length != 1 && gci_reader_eof(lexer->reader)) {
-                return lec_internal_lexer_eof(lexer, token);
-            } else if (length != 1) {
-                return LEC_ERROR_READER;
-            }
-
-            lexer->buffer_char = c;
-            lexer->byte_position += 1;
-        }
-
         lexer->prev_arena_start = lexer->arena.position;
-        lexer->prev_byte_position = lexer->byte_position - 1;
-        token->byte_start = lexer->byte_position - 1;
+        lexer->prev_byte_position = lexer->byte_position - (lexer->buffer_char != EOF);
+        token->byte_start = lexer->prev_byte_position;
     }
 
     while (lexer->state != LEC_STATE_END) {
@@ -131,6 +118,10 @@ enum LecError lec_internal_lexer_next_char(struct LecLexer *lexer, struct LecTok
         lexer->state == LEC_STATE_COMMENT
         || lexer->state == LEC_STATE_CHAR
         || lexer->state == LEC_STATE_STRING
+        || (
+            lexer->state == LEC_STATE_MULTI_CHAR
+            && lexer->sub_state.multi_state == LEC_STATE_MULTI_CHAR_WHITESPACE
+        )
     );
     if (!allow_whitespace && isspace((unsigned char) c)) {
         lexer->state = LEC_STATE_END;
@@ -152,6 +143,9 @@ enum LecError lec_internal_lexer_start(struct LecLexer *lexer, struct LecToken *
         } else {
             lexer->sub_state.number_state = LEC_STATE_NUMBER_WHOLE;
         }
+    } else if (isspace((unsigned char) c) && c != '\n') {
+        lexer->state = LEC_STATE_MULTI_CHAR;
+        lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_WHITESPACE;
     } else {
         switch (c) {
             case '+':
@@ -177,6 +171,15 @@ enum LecError lec_internal_lexer_start(struct LecLexer *lexer, struct LecToken *
             case '=':
                 lexer->state = LEC_STATE_MULTI_CHAR;
                 lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_ASSIGN;
+                break;
+            case '\\':
+                skip_char = true;
+                lexer->state = LEC_STATE_MULTI_CHAR;
+                lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_ESCAPE;
+                break;
+            case '\n':
+                lexer->state = LEC_STATE_END;
+                token->type = LEC_TOKEN_TYPE_NEWLINE;
                 break;
             case '(':
                 lexer->state = LEC_STATE_END;
@@ -249,7 +252,9 @@ enum LecError lec_internal_lexer_start(struct LecLexer *lexer, struct LecToken *
                 lexer->prev_byte_position += 1;
                 break;
             default:
-                assert(false); // TODO: now what?
+                fprintf(stderr, "Got unexpected byte '%c'\n", c);
+                lexer->buffer_char = c;
+                return LEC_ERROR_ILLEGAL_BYTES;
         }
     }
     
@@ -348,6 +353,23 @@ enum LecError lec_internal_lexer_multi_char(struct LecLexer *lexer, struct LecTo
                 lexer->buffer_char = c;
             }
             lexer->state = LEC_STATE_END;
+            break;
+        case (LEC_STATE_MULTI_CHAR_ESCAPE):
+            if (c == '\n') {
+                token->type = LEC_TOKEN_TYPE_NEWLINE;
+                token->byte_start += 1;
+                lexer->prev_byte_position += 1;
+            } else {
+                lexer->buffer_char = c;
+            }
+            lexer->state = LEC_STATE_END;
+            break;
+        case (LEC_STATE_MULTI_CHAR_WHITESPACE):
+            if (c == '\n' || !isspace((unsigned char) c)) {
+                token->type = LEC_TOKEN_TYPE_WHITESPACE;
+                lexer->buffer_char = c;
+                lexer->state = LEC_STATE_END;
+            }
             break;
         case (LEC_STATE_MULTI_CHAR_FIRST):
         case (LEC_STATE_MULTI_CHAR_LAST):
@@ -539,6 +561,7 @@ enum LecError lec_internal_lexer_comment(struct LecLexer *lexer, struct LecToken
     if (c == '\n') {
         token->type = LEC_TOKEN_TYPE_COMMENT;
         lexer->state = LEC_STATE_END;
+        lexer->buffer_char = '\n';
         return LEC_ERROR_OK;
     }
 
@@ -582,6 +605,11 @@ enum LecError lec_internal_lexer_eof(struct LecLexer *lexer, struct LecToken *to
                     break;
                 case (LEC_STATE_MULTI_CHAR_NOT):
                     token->type = LEC_TOKEN_TYPE_NOT;
+                    break;
+                case (LEC_STATE_MULTI_CHAR_ESCAPE):
+                    return LEC_ERROR_ILLEGAL_BYTES;
+                case (LEC_STATE_MULTI_CHAR_WHITESPACE):
+                    token->type = LEC_TOKEN_TYPE_WHITESPACE;
                     break;
                 case (LEC_STATE_MULTI_CHAR_FIRST):
                 case (LEC_STATE_MULTI_CHAR_LAST):

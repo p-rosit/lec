@@ -72,30 +72,6 @@ test "lexer whitespace" {
 
 // Section: Single char tokens -------------------------------------------------
 
-test "lexer next single char" {
-    var buffer: [2]u8 = undefined;
-    const arena = try zlec.Arena.init(&buffer);
-
-    const data = "\n-.";
-    var reader = try gci.ReaderString.init(data);
-
-    var lexer = try Self.init(reader.interface(), arena);
-
-    const token1 = try lexer.next();
-    try testing.expectEqual(TokenType.minus, token1.type());
-    try testing.expectEqual(0, token1.inner.arena_start);
-    try testing.expectEqual(1, token1.inner.byte_start);
-    try testing.expectEqual(1, token1.inner.length);
-    try testing.expectEqualStrings("-", buffer[0..1]);
-
-    const token2 = try lexer.next();
-    try testing.expectEqual(TokenType.dot, token2.type());
-    try testing.expectEqual(1, token2.inner.arena_start);
-    try testing.expectEqual(2, token2.inner.byte_start);
-    try testing.expectEqual(1, token2.inner.length);
-    try testing.expectEqualStrings(".", buffer[1..2]);
-}
-
 test "lexer next plus" {
     var buffer: [1]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
@@ -830,19 +806,23 @@ test "lexer next decrement fail" {
 // Section: Comment ------------------------------------------------------------
 
 test "lexer next comment" {
-    var buffer: [8]u8 = undefined;
+    var buffer: [9]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
 
-    const data = "\t//\tcomment\n";
+    const data = "//\tcomment\n";
     var reader = try gci.ReaderString.init(data);
 
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.comment, token.type());
     try testing.expectEqual(0, token.inner.arena_start);
-    try testing.expectEqual(3, token.inner.byte_start);
+    try testing.expectEqual(2, token.inner.byte_start);
     try testing.expectEqual(8, token.inner.length);
-    try testing.expectEqualStrings("\tcomment", &buffer);
+    try testing.expectEqualStrings("\tcomment", buffer[0..8]);
+
+    const newline = try lexer.next();
+    try testing.expectEqual(TokenType.newline, newline.type());
+    try testing.expectEqualStrings("\n", buffer[8..9]);
 }
 
 test "lexer next comment eof" {
@@ -1562,14 +1542,14 @@ test "lexer next text" {
     var buffer: [3]u8 = undefined;
     const arena = try zlec.Arena.init(&buffer);
 
-    const data = "\t\nint ";
+    const data = "int ";
     var reader = try gci.ReaderString.init(data);
 
     var lexer = try Self.init(reader.interface(), arena);
     const token = try lexer.next();
     try testing.expectEqual(TokenType.text, token.type());
     try testing.expectEqual(0, token.inner.arena_start);
-    try testing.expectEqual(2, token.inner.byte_start);
+    try testing.expectEqual(0, token.inner.byte_start);
     try testing.expectEqual(3, token.inner.length);
 }
 

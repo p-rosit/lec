@@ -61,40 +61,6 @@ test "lexer whitespace" {
 
 // Section: Single char tokens -------------------------------------------------
 
-test "lexer next single char" {
-    var buffer: [2]u8 = undefined;
-    var arena: lib.LecArena = undefined;
-    const arena_init = lib.lec_arena_init(&arena, &buffer, buffer.len);
-    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), arena_init);
-
-    const data = "\n-.";
-    var reader: lib.GciReaderString = undefined;
-    const reader_init = lib.gci_reader_string_init(&reader, data.ptr, data.len);
-    try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), reader_init);
-
-    var lexer: lib.LecLexer = undefined;
-    const init_err = lib.lec_lexer_init(&lexer, lib.gci_reader_string_interface(&reader), arena);
-    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), init_err);
-
-    var token1: lib.LecToken = undefined;
-    const next1_err = lib.lec_lexer_next(&lexer, &token1);
-    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next1_err);
-    try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_MINUS), token1.type);
-    try testing.expectEqual(0, token1.arena_start);
-    try testing.expectEqual(1, token1.byte_start);
-    try testing.expectEqual(1, token1.length);
-    try testing.expectEqualStrings("-", buffer[0..1]);
-
-    var token2: lib.LecToken = undefined;
-    const next2_err = lib.lec_lexer_next(&lexer, &token2);
-    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next2_err);
-    try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_DOT), token2.type);
-    try testing.expectEqual(1, token2.arena_start);
-    try testing.expectEqual(2, token2.byte_start);
-    try testing.expectEqual(1, token2.length);
-    try testing.expectEqualStrings(".", buffer[1..2]);
-}
-
 test "lexer next plus" {
     var buffer: [1]u8 = undefined;
     var arena: lib.LecArena = undefined;
@@ -1252,12 +1218,12 @@ test "lexer next decrement fail" {
 // Section: Comment ------------------------------------------------------------
 
 test "lexer next comment" {
-    var buffer: [8]u8 = undefined;
+    var buffer: [9]u8 = undefined;
     var arena: lib.LecArena = undefined;
     const arena_init = lib.lec_arena_init(&arena, &buffer, buffer.len);
     try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), arena_init);
 
-    const data = "\t//\tcomment\n";
+    const data = "//\tcomment\n";
     var reader: lib.GciReaderString = undefined;
     const reader_init = lib.gci_reader_string_init(&reader, data.ptr, data.len);
     try testing.expectEqual(@as(c_uint, lib.GCI_ERROR_OK), reader_init);
@@ -1271,9 +1237,14 @@ test "lexer next comment" {
     try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_COMMENT), token.type);
     try testing.expectEqual(0, token.arena_start);
-    try testing.expectEqual(3, token.byte_start);
+    try testing.expectEqual(2, token.byte_start);
     try testing.expectEqual(8, token.length);
-    try testing.expectEqualStrings("\tcomment", &buffer);
+    try testing.expectEqualStrings("\tcomment", buffer[0..8]);
+
+    const newline_err = lib.lec_lexer_next(&lexer, &token);
+    try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), newline_err);
+    try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_NEWLINE), token.type);
+    try testing.expectEqualStrings("\n", buffer[8..9]);
 }
 
 test "lexer next comment eof" {
@@ -2364,7 +2335,7 @@ test "lexer next text" {
     const arena_init = lib.lec_arena_init(&arena, &buffer, buffer.len);
     try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), arena_init);
 
-    const data = "\t\nint ";
+    const data = "int ";
     var reader: lib.GciReaderString = undefined;
     const reader_init = lib.gci_reader_string_init(&reader, data, data.len);
     try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), reader_init);
@@ -2378,7 +2349,7 @@ test "lexer next text" {
     try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_TEXT), token.type);
     try testing.expectEqual(0, token.arena_start);
-    try testing.expectEqual(2, token.byte_start);
+    try testing.expectEqual(0, token.byte_start);
     try testing.expectEqual(3, token.length);
     try testing.expectEqualStrings("int", &buffer);
 }

@@ -4,6 +4,9 @@ const Self = @This();
 pub const Type = enum {
     unknown,
     text,
+    whitespace,
+    newline,
+    escaped_newline,
     number_int,
     number_bin,
     number_hex,
@@ -42,6 +45,9 @@ pub const Type = enum {
         return switch (value) {
             lib.LEC_TOKEN_TYPE_UNKNOWN => return .unknown,
             lib.LEC_TOKEN_TYPE_TEXT => return .text,
+            lib.LEC_TOKEN_TYPE_WHITESPACE => return .whitespace,
+            lib.LEC_TOKEN_TYPE_NEWLINE => return .newline,
+            lib.LEC_TOKEN_TYPE_ESCAPED_NEWLINE => return .escaped_newline,
             lib.LEC_TOKEN_TYPE_NUMBER_INT => return .number_int,
             lib.LEC_TOKEN_TYPE_NUMBER_BIN => return .number_bin,
             lib.LEC_TOKEN_TYPE_NUMBER_HEX => return .number_hex,

@@ -3,7 +3,8 @@
         "name": "space",
         "data": "1 ",
         "result": [
-            {"type": "number_int", "data": "1", "byte_start": 0}
+            {"type": "number_int", "data": "1", "byte_start": 0},
+            {"type": "whitespace", "data": " ", "byte_start": 1}
         ]
     },
     {

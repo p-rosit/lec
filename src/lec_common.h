@@ -9,6 +9,7 @@ enum LecError {
     LEC_ERROR_EOF = 4,
     LEC_ERROR_NUMBER = 5,
     LEC_ERROR_UNTERMINATED = 6,
+    LEC_ERROR_ILLEGAL_BYTES = 7,
 };
 
 #endif

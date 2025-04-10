@@ -29,11 +29,14 @@ test {
     defer _ = arena.deinit();
 
     var paths = try findTests(allocator);
-    defer paths.deinit(allocator);
+    defer {
+        for (paths.items) |path| {
+            allocator.free(path);
+        }
+        paths.deinit(allocator);
+    }
 
     for (paths.items) |path| {
-        defer allocator.free(path);
-
         const file = try std.fs.cwd().openFile(path, .{});
         var file_reader = ZigFileReader.init(&file.reader());
         var comment_reader = try con.ReaderComment.init(file_reader.interface());

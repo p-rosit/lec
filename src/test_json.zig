@@ -259,7 +259,7 @@ fn parseTokenType(token_type: []const u8) !lec.Token.Type {
     } else if (std.mem.eql(u8, "newline", token_type)) {
         return .newline;
     } else if (std.mem.eql(u8, "escaped_newline", token_type)) {
-        return .newline;
+        return .escaped_newline;
     } else if (std.mem.eql(u8, "number_int", token_type)) {
         return .number_int;
     } else if (std.mem.eql(u8, "number_bin", token_type)) {

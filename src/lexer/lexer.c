@@ -357,7 +357,7 @@ enum LecError lec_internal_lexer_multi_char(struct LecLexer *lexer, struct LecTo
             break;
         case (LEC_STATE_MULTI_CHAR_ESCAPE):
             if (c == '\n') {
-                token->type = LEC_TOKEN_TYPE_NEWLINE;
+                token->type = LEC_TOKEN_TYPE_ESCAPED_NEWLINE;
                 token->byte_start += 1;
                 lexer->prev_byte_position += 1;
             } else {

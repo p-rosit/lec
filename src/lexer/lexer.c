@@ -683,6 +683,7 @@ bool lec_internal_lexer_number_valid_end(struct LecLexer *lexer, char c) {
         case '!':
         case '*':
         case '/':
+        case '\\':
         case '=':
         case '(':
         case ')':

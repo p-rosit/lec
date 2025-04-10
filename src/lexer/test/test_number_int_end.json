@@ -230,5 +230,21 @@
             {"type": "number_int", "data": "29", "byte_start": 0},
             {"type": "preproc", "data": "#", "byte_start": 2}
         ]
+    },
+    {
+        "name": "newline",
+        "data": "30\n",
+        "result": [
+            {"type": "number_int", "data": "30", "byte_start": 0},
+            {"type": "newline", "data": "\n", "byte_start": 2}
+        ]
+    },
+    {
+        "name": "escaped newline",
+        "data": "31\\\n",
+        "result": [
+            {"type": "number_int", "data": "31", "byte_start": 0},
+            {"type": "escaped_newline", "data": "\n", "byte_start": 3}
+        ]
     }
 ]

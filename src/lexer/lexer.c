@@ -449,6 +449,8 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
                 token->type = LEC_TOKEN_TYPE_NUMBER_INT;
                 lexer->state = LEC_STATE_END;
                 lexer->buffer_char = c;
+            } else if (isdigit((unsigned char) c)) {
+                lexer->sub_state.number_state = LEC_STATE_NUMBER_WHOLE;
             } else if (c == '.') {
                 lexer->sub_state.number_state = LEC_STATE_NUMBER_POINT;
             } else if (c == 'e' || c == 'E') {

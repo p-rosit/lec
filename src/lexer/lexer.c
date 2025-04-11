@@ -215,8 +215,8 @@ enum LecError lec_internal_lexer_start(struct LecLexer *lexer, struct LecToken *
                 lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_GREAT;
                 break;
             case '.':
-                lexer->state = LEC_STATE_END;
-                token->type = LEC_TOKEN_TYPE_DOT;
+                lexer->state = LEC_STATE_MULTI_CHAR;
+                lexer->sub_state.multi_state = LEC_STATE_MULTI_CHAR_DOT;
                 break;
             case ',':
                 lexer->state = LEC_STATE_END;
@@ -372,6 +372,16 @@ enum LecError lec_internal_lexer_multi_char(struct LecLexer *lexer, struct LecTo
                 lexer->state = LEC_STATE_END;
             }
             break;
+        case (LEC_STATE_MULTI_CHAR_DOT):
+            if (isdigit((unsigned char) c)) {
+                lexer->state = LEC_STATE_NUMBER;
+                lexer->sub_state.number_state = LEC_STATE_NUMBER_FRACTION;
+            } else {
+                token->type = LEC_TOKEN_TYPE_DOT;
+                lexer->buffer_char = c;
+                lexer->state = LEC_STATE_END;
+            }
+            break;
         case (LEC_STATE_MULTI_CHAR_FIRST):
         case (LEC_STATE_MULTI_CHAR_LAST):
             assert(false);
@@ -475,7 +485,11 @@ enum LecError lec_internal_lexer_number(struct LecLexer *lexer, struct LecToken 
             }
             break;
         case (LEC_STATE_NUMBER_POINT):
-            if (!isdigit((unsigned char) c)) {
+            if (lec_internal_lexer_number_valid_end(lexer, c)) {
+                token->type = LEC_TOKEN_TYPE_NUMBER_FLOAT;
+                lexer->state = LEC_STATE_END;
+                lexer->buffer_char = c;
+            } else if (!isdigit((unsigned char) c)) {
                 lexer->buffer_char = c;
                 return LEC_ERROR_NUMBER;
             }
@@ -612,6 +626,9 @@ enum LecError lec_internal_lexer_eof(struct LecLexer *lexer, struct LecToken *to
                 case (LEC_STATE_MULTI_CHAR_WHITESPACE):
                     token->type = LEC_TOKEN_TYPE_WHITESPACE;
                     break;
+                case (LEC_STATE_MULTI_CHAR_DOT):
+                    token->type = LEC_TOKEN_TYPE_DOT;
+                    break;
                 case (LEC_STATE_MULTI_CHAR_FIRST):
                 case (LEC_STATE_MULTI_CHAR_LAST):
                     assert(false);
@@ -634,7 +651,7 @@ enum LecError lec_internal_lexer_eof(struct LecLexer *lexer, struct LecToken *to
                     token->type = LEC_TOKEN_TYPE_NUMBER_INT;
                     break;
                 case (LEC_STATE_NUMBER_POINT):
-                    return LEC_ERROR_NUMBER;
+                    token->type = LEC_TOKEN_TYPE_NUMBER_FLOAT;
                 case (LEC_STATE_NUMBER_FRACTION):
                     token->type = LEC_TOKEN_TYPE_NUMBER_FLOAT;
                     break;
@@ -693,7 +710,6 @@ bool lec_internal_lexer_number_valid_end(struct LecLexer *lexer, char c) {
         case '}':
         case '<':
         case '>':
-        // case '.':  // not a valid end
         case ',':
         case '?':
         case ':':

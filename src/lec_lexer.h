@@ -30,30 +30,31 @@ enum LecStateMultiChar {
     LEC_STATE_MULTI_CHAR_NOT            = 8,
     LEC_STATE_MULTI_CHAR_ESCAPE         = 9,
     LEC_STATE_MULTI_CHAR_WHITESPACE     = 10,
-    LEC_STATE_MULTI_CHAR_LAST           = 11,
+    LEC_STATE_MULTI_CHAR_DOT            = 11,
+    LEC_STATE_MULTI_CHAR_LAST           = 12,
 };
 
 enum LecStateChars {
-    LEC_STATE_CHARS_FIRST       = 12,
-    LEC_STATE_CHARS             = 13,
-    LEC_STATE_CHARS_ESCAPED     = 14,
-    LEC_STATE_CHARS_ESCAPED_X   = 15,
-    LEC_STATE_CHARS_ESCAPED_U   = 16,
-    LEC_STATE_CHARS_LAST        = 17,
+    LEC_STATE_CHARS_FIRST       = 13,
+    LEC_STATE_CHARS             = 14,
+    LEC_STATE_CHARS_ESCAPED     = 15,
+    LEC_STATE_CHARS_ESCAPED_X   = 16,
+    LEC_STATE_CHARS_ESCAPED_U   = 17,
+    LEC_STATE_CHARS_LAST        = 18,
 };
 
 enum LecStateNumber {
-    LEC_STATE_NUMBER_FIRST          = 18,
-    LEC_STATE_NUMBER_ZERO           = 19,
-    LEC_STATE_NUMBER_WHOLE          = 20,
-    LEC_STATE_NUMBER_POINT          = 21,
-    LEC_STATE_NUMBER_FRACTION       = 22,
-    LEC_STATE_NUMBER_E              = 23,
-    LEC_STATE_NUMBER_EXPONENT_SIGN  = 24,
-    LEC_STATE_NUMBER_EXPONENT       = 25,
-    LEC_STATE_NUMBER_HEX            = 26,
-    LEC_STATE_NUMBER_BIN            = 27,
-    LEC_STATE_NUMBER_LAST           = 28,
+    LEC_STATE_NUMBER_FIRST          = 19,
+    LEC_STATE_NUMBER_ZERO           = 20,
+    LEC_STATE_NUMBER_WHOLE          = 21,
+    LEC_STATE_NUMBER_POINT          = 22,
+    LEC_STATE_NUMBER_FRACTION       = 23,
+    LEC_STATE_NUMBER_E              = 24,
+    LEC_STATE_NUMBER_EXPONENT_SIGN  = 25,
+    LEC_STATE_NUMBER_EXPONENT       = 26,
+    LEC_STATE_NUMBER_HEX            = 27,
+    LEC_STATE_NUMBER_BIN            = 28,
+    LEC_STATE_NUMBER_LAST           = 29,
 };
 
 struct LecLexer {

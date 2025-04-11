@@ -71,6 +71,8 @@ fn runTest(allocator: std.mem.Allocator, path: []const u8, t: LexerTest) !void {
             if (error.Eof == err) {
                 break;
             }
+            std.debug.print("====================================\n", .{});
+            std.debug.print("Test case {s}:{s} failed, could not tokenize.\n", .{ path, t.name });
             return err;
         };
         try tokens.append(allocator, tok);

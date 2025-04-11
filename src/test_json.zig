@@ -44,7 +44,11 @@ test {
         var depth: [4]con.Container = undefined;
         var parse_context = try con.Deserialize.init(comment_reader.interface(), &depth);
 
-        const tests = try parseTests(arena.allocator(), &parse_context);
+        const tests = parseTests(arena.allocator(), &parse_context) catch |err| {
+            std.debug.print("====================================\n", .{});
+            std.debug.print("Error parsing {s}\n", .{path});
+            return err;
+        };
         defer _ = arena.reset(.retain_capacity);
 
         for (tests.items) |t| {

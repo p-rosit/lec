@@ -1264,7 +1264,7 @@ test "lexer next number type fail" {
     const token = try lexer.next();
     try testing.expectEqual(TokenType.number_hex, token.type());
     try testing.expectEqual(0, token.inner.arena_start);
-    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(2, token.inner.byte_start);
     try testing.expectEqual(1, token.inner.length);
     try testing.expectEqualStrings("3", &buffer);
 }
@@ -1280,7 +1280,7 @@ test "lexer next hex" {
     const token = try lexer.next();
     try testing.expectEqual(TokenType.number_hex, token.type());
     try testing.expectEqual(0, token.inner.arena_start);
-    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(2, token.inner.byte_start);
     try testing.expectEqual(2, token.inner.length);
     try testing.expectEqualStrings("2f", &buffer);
 }
@@ -1296,7 +1296,7 @@ test "lexer next hex eof" {
     const token = try lexer.next();
     try testing.expectEqual(TokenType.number_hex, token.type());
     try testing.expectEqual(0, token.inner.arena_start);
-    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(2, token.inner.byte_start);
     try testing.expectEqual(2, token.inner.length);
     try testing.expectEqualStrings("2f", &buffer);
 }
@@ -1320,7 +1320,7 @@ test "lexer next hex fail" {
     const token = try lexer.next();
     try testing.expectEqual(TokenType.number_hex, token.type());
     try testing.expectEqual(0, token.inner.arena_start);
-    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(2, token.inner.byte_start);
     try testing.expectEqual(2, token.inner.length);
     try testing.expectEqualStrings("a3", &buffer);
 }
@@ -1336,7 +1336,7 @@ test "lexer next bin" {
     const token = try lexer.next();
     try testing.expectEqual(TokenType.number_bin, token.type());
     try testing.expectEqual(0, token.inner.arena_start);
-    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(2, token.inner.byte_start);
     try testing.expectEqual(2, token.inner.length);
     try testing.expectEqualStrings("10", &buffer);
 }
@@ -1352,7 +1352,7 @@ test "lexer next bin eof" {
     const token = try lexer.next();
     try testing.expectEqual(TokenType.number_bin, token.type());
     try testing.expectEqual(0, token.inner.arena_start);
-    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(2, token.inner.byte_start);
     try testing.expectEqual(2, token.inner.length);
     try testing.expectEqualStrings("10", &buffer);
 }
@@ -1376,7 +1376,7 @@ test "lexer next bin fail" {
     const token = try lexer.next();
     try testing.expectEqual(TokenType.number_bin, token.type());
     try testing.expectEqual(0, token.inner.arena_start);
-    try testing.expectEqual(0, token.inner.byte_start);
+    try testing.expectEqual(2, token.inner.byte_start);
     try testing.expectEqual(2, token.inner.length);
     try testing.expectEqualStrings("11", &buffer);
 }

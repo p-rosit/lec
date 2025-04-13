@@ -44,17 +44,26 @@ enum LecStateChars {
 };
 
 enum LecStateNumber {
-    LEC_STATE_NUMBER_FIRST          = 19,
-    LEC_STATE_NUMBER_ZERO           = 20,
-    LEC_STATE_NUMBER_WHOLE          = 21,
-    LEC_STATE_NUMBER_POINT          = 22,
-    LEC_STATE_NUMBER_FRACTION       = 23,
-    LEC_STATE_NUMBER_E              = 24,
-    LEC_STATE_NUMBER_EXPONENT_SIGN  = 25,
-    LEC_STATE_NUMBER_EXPONENT       = 26,
-    LEC_STATE_NUMBER_HEX            = 27,
-    LEC_STATE_NUMBER_BIN            = 28,
-    LEC_STATE_NUMBER_LAST           = 29,
+    LEC_STATE_NUMBER_FIRST              = 19,
+
+    LEC_STATE_NUMBER_ZERO               = 20,
+    LEC_STATE_NUMBER_WHOLE              = 21,
+    LEC_STATE_NUMBER_POINT              = 22,
+    LEC_STATE_NUMBER_FRACTION           = 23,
+    LEC_STATE_NUMBER_E                  = 24,
+    LEC_STATE_NUMBER_EXPONENT_SIGN      = 25,
+    LEC_STATE_NUMBER_EXPONENT           = 26,
+
+    LEC_STATE_NUMBER_HEX_WHOLE          = 27,
+    LEC_STATE_NUMBER_HEX_POINT          = 28,
+    LEC_STATE_NUMBER_HEX_FRACTION       = 29,
+    LEC_STATE_NUMBER_HEX_P              = 30,
+    LEC_STATE_NUMBER_HEX_EXPONENT_SIGN  = 31,
+    LEC_STATE_NUMBER_HEX_EXPONENT       = 32,
+
+    LEC_STATE_NUMBER_BIN                = 33,
+
+    LEC_STATE_NUMBER_LAST               = 34,
 };
 
 struct LecLexer {

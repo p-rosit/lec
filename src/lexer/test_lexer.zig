@@ -1906,7 +1906,7 @@ test "lexer next number type fail" {
     try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next2_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_NUMBER_HEX), token.type);
     try testing.expectEqual(0, token.arena_start);
-    try testing.expectEqual(0, token.byte_start);
+    try testing.expectEqual(2, token.byte_start);
     try testing.expectEqual(1, token.length);
     try testing.expectEqualStrings("3", &buffer);
 }
@@ -1931,7 +1931,7 @@ test "lexer next hex" {
     try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_NUMBER_HEX), token.type);
     try testing.expectEqual(0, token.arena_start);
-    try testing.expectEqual(0, token.byte_start);
+    try testing.expectEqual(2, token.byte_start);
     try testing.expectEqual(2, token.length);
     try testing.expectEqualStrings("2f", &buffer);
 }
@@ -1956,7 +1956,7 @@ test "lexer next hex eof" {
     try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_NUMBER_HEX), token.type);
     try testing.expectEqual(0, token.arena_start);
-    try testing.expectEqual(0, token.byte_start);
+    try testing.expectEqual(2, token.byte_start);
     try testing.expectEqual(2, token.length);
     try testing.expectEqualStrings("2f", &buffer);
 }
@@ -1990,7 +1990,7 @@ test "lexer next hex fail" {
     try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next2_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_NUMBER_HEX), token.type);
     try testing.expectEqual(0, token.arena_start);
-    try testing.expectEqual(0, token.byte_start);
+    try testing.expectEqual(2, token.byte_start);
     try testing.expectEqual(2, token.length);
     try testing.expectEqualStrings("a3", &buffer);
 }
@@ -2015,7 +2015,7 @@ test "lexer next bin" {
     try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_NUMBER_BIN), token.type);
     try testing.expectEqual(0, token.arena_start);
-    try testing.expectEqual(0, token.byte_start);
+    try testing.expectEqual(2, token.byte_start);
     try testing.expectEqual(2, token.length);
     try testing.expectEqualStrings("10", &buffer);
 }
@@ -2040,7 +2040,7 @@ test "lexer next bin eof" {
     try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_NUMBER_BIN), token.type);
     try testing.expectEqual(0, token.arena_start);
-    try testing.expectEqual(0, token.byte_start);
+    try testing.expectEqual(2, token.byte_start);
     try testing.expectEqual(2, token.length);
     try testing.expectEqualStrings("10", &buffer);
 }
@@ -2074,7 +2074,7 @@ test "lexer next bin fail" {
     try testing.expectEqual(@as(c_uint, lib.LEC_ERROR_OK), next2_err);
     try testing.expectEqual(@as(c_uint, lib.LEC_TOKEN_TYPE_NUMBER_BIN), token.type);
     try testing.expectEqual(0, token.arena_start);
-    try testing.expectEqual(0, token.byte_start);
+    try testing.expectEqual(2, token.byte_start);
     try testing.expectEqual(2, token.length);
     try testing.expectEqualStrings("11", &buffer);
 }

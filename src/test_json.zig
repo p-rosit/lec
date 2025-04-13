@@ -274,6 +274,8 @@ fn parseTokenType(token_type: []const u8) !lec.Token.Type {
         return .number_hex;
     } else if (std.mem.eql(u8, "number_float", token_type)) {
         return .number_float;
+    } else if (std.mem.eql(u8, "number_float_hex", token_type)) {
+        return .number_float_hex;
     } else if (std.mem.eql(u8, "char", token_type)) {
         return .char;
     } else if (std.mem.eql(u8, "string", token_type)) {
